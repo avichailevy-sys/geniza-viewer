@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cairo Cairo Geniza → Sefaria Alignment Viewer · MiDRASH</title>
+<title>Cairo Cairo Geniza · passim Results Viewer · MiDRASH</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@300;400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -152,7 +152,7 @@
   <div id="header">
     <span class="mono">MiDRASH · EPHE-PSL</span>
     <div class="divider"></div>
-    <span class="title">Cairo Geniza → Sefaria Alignment Viewer</span>
+    <span class="title">Cairo Geniza · passim Results Viewer</span>
     <div class="spacer"></div>
     <span class="mono">passim experiment · Prof. David Smith</span>
   </div>
@@ -241,11 +241,24 @@ const CC = {
   liturgy:  { label:'Liturgy',       color:'#1060a0', bg:'#e8f2fc', border:'#a8ccf0' },
   mishneh:  { label:'Mishneh Torah', color:'#a02060', bg:'#fce8f2', border:'#f0a8cc' },
   zohar:    { label:'Zohar',         color:'#7a5c00', bg:'#fdf5dc', border:'#e0c870' },
+  midrash:  { label:'Rabbinic',       color:'#5a6e8a', bg:'#edf2f8', border:'#b0c4de' },
   bible:    { label:'Bible',         color:'#217a47', bg:'#eaf5ee', border:'#b2dcc0' },
   default:  { label:'Other',         color:'#555',    bg:'#f4f4f4', border:'#ccc'    }
 };
 
-function getCorpus(src) { return src.split('_')[0]; }
+function getCorpus(src) {
+  const c = src.split('_')[0];
+  // Normalize known corpora
+  if (['tanakh','mishnah','talmud','liturgy','mishneh','zohar'].includes(c)) return c;
+  // Everything else (midrash variants, etc.) → midrash
+  const lower = src.toLowerCase();
+  if (lower.includes('midrash') || lower.includes('mekhilta') || lower.includes('sifra') ||
+      lower.includes('sifrei') || lower.includes('bereshit') || lower.includes('yalkut') ||
+      lower.includes('ein yaakov') || lower.includes('pirkei') || lower.includes('tanna') ||
+      lower.includes('pesikta') || lower.includes('shemot') || lower.includes('kohelet') ||
+      lower.includes('otzar') || lower.includes('seder olam') || lower.includes('rabbah')) return 'midrash';
+  return c;
+}
 function getCfg(src) { return CC[getCorpus(src)] || CC.default; }
 function getSrcLabel(src) {
   const p = src.split('_'), c = p[0];
@@ -279,23 +292,11 @@ function nliViewerUrl(f) {
 }
 
 // ── Sample data ────────────────────────────────────────────────────────────
-const SAMPLE = [
-  {alma:'990000465650205171',ie:'39908278',page:'000001',lines:14,src:'tanakh_torah_deuteronomy',sefaria_ref:'deuteronomy',count:13,coverage:0.929,title:'תורה (דברים יד)',shelfmark:'Ms. Heb. 7208.7=4',date:'מאה טו',has_nli:true,has_fgp:false},
-  {alma:'990000571680205171',ie:'26807240',page:'000007',lines:61,src:'tanakh_prophets_joshua',sefaria_ref:'joshua',count:49,coverage:0.803,title:'נביאים ראשונים',shelfmark:'Ms. EVR II B 39',date:'0989',has_nli:false,has_fgp:true},
-  {alma:'990000571690205171',ie:'48364064',page:'000011',lines:59,src:'tanakh_torah_genesis',sefaria_ref:'genesis',count:54,coverage:0.915,title:'תורה (קטעים)',shelfmark:'Ms. EVR II B 59',date:'1022',has_nli:false,has_fgp:true},
-  {alma:'990000571700205171',ie:'47705655',page:'000005',lines:55,src:'tanakh_prophets_isaiah',sefaria_ref:'isaiah',count:53,coverage:0.964,title:'נביאים אחרונים',shelfmark:'Ms. EVR II B 116',date:'מאה יא',has_nli:false,has_fgp:true},
-  {alma:'990000432000205171',ie:'9346905',page:'000003',lines:24,src:'mishnah_Seder Zeraim_Mishnah Maaser Sheni',sefaria_ref:'Mishnah Maaser Sheni',count:22,coverage:0.917,title:'משנה סדר זרעים',shelfmark:'Ms. Heb. 5699=28',date:'מאה י',has_nli:true,has_fgp:true},
-  {alma:'990000898860205171',ie:'57628714',page:'000008',lines:67,src:'mishnah_Seder Tahorot_Mishnah Negaim',sefaria_ref:'Mishnah Negaim',count:61,coverage:0.91,title:'משנה סדר טהרות',shelfmark:'Ms. Evr. Antonin B 825',date:'מאה י-יא',has_nli:false,has_fgp:true},
-  {alma:'990000432020205171',ie:'9347023',page:'000004',lines:17,src:'talmud_bavli_Seder Nezikin_Sanhedrin',sefaria_ref:'Sanhedrin',count:15,coverage:0.882,title:'מעשיות מן התלמוד',shelfmark:'Ms. Heb. 5700=8',date:'מאה י-יא',has_nli:true,has_fgp:true},
-  {alma:'990000906660205171',ie:'36896882',page:'000006',lines:14,src:'talmud_bavli_Seder Moed_Yoma',sefaria_ref:'Yoma',count:13,coverage:0.929,title:'הלכות הריף (יומא)',shelfmark:'Ms. Evr. Antonin B 1122',date:'',has_nli:false,has_fgp:true},
-  {alma:'990000907460205171',ie:'36902743',page:'000004',lines:23,src:'talmud_yerushalmi_Seder Nezikin_Jerusalem Talmud Avodah Zarah',sefaria_ref:'Jerusalem Talmud Avodah Zarah',count:20,coverage:0.87,title:'תלמוד ירושלמי סדר נזיקין',shelfmark:'Ms. Evr. Antonin B 165',date:'',has_nli:false,has_fgp:true},
-  {alma:'990000622340205171',ie:'36388290',page:'000005',lines:19,src:'mishneh_torah',sefaria_ref:'torah',count:17,coverage:0.895,title:'משנה תורה (ספר אהבה)',shelfmark:'Ms. EVR II A 313/22',date:'מאה יד',has_nli:false,has_fgp:false},
-  {alma:'990000571740205171',ie:'47707087',page:'000044',lines:55,src:'liturgy_siddur',sefaria_ref:'siddur',count:47,coverage:0.855,title:'כתובים (קטעים)',shelfmark:'Ms. EVR II B 115',date:'0994',has_nli:false,has_fgp:true}
-];
+// Data loads from data.tsv automatically
 
 // ── State ──────────────────────────────────────────────────────────────────
-let frags = SAMPLE;
-let isSample = true;
+let frags = [];
+let isSample = false;
 let selected = null;
 let search = '';
 let corpusFilter = null;
