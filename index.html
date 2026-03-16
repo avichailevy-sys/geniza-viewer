@@ -451,6 +451,7 @@ function showTranscription(f) {
   const pg = parseInt(f.page, 10);
   document.getElementById('txSub').textContent = `${f.lines} lines on page · IE ${f.ie}`;
 
+  console.log('catalog debug:', f.subtitle, f.custodial, f.publications, f.uniform_title);
   const catalogFields = [
     ['Title', f.title],
     ['Subtitle', f.subtitle],
