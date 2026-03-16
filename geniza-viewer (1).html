@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="he" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cairo Cairo Geniza → Sefaria Alignment Viewer · MiDRASH</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@300;400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; font-family: 'Source Serif 4', Georgia, serif; background: #f4f4f0; color: #222; }
+
+  /* ── Layout ── */
+  #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+  /* ── Header ── */
+  #header {
+    height: 48px; flex-shrink: 0;
+    background: #fff; border-bottom: 1px solid #e0e0d8;
+    display: flex; align-items: center; padding: 0 18px; gap: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  #header .mono { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .16em; color: #ccc; text-transform: uppercase; }
+  #header .divider { width: 1px; height: 20px; background: #e0e0d8; }
+  #header .title { font-size: 17px; font-weight: 700; color: #222; }
+  #header .he-title { font-family: 'Noto Serif Hebrew', serif; font-size: 14px; color: #999; direction: rtl; }
+  #header .spacer { flex: 1; }
+
+  /* ── Stats bar ── */
+  #statsbar {
+    height: 34px; flex-shrink: 0;
+    background: #f0f0ec; border-bottom: 1px solid #ddd;
+    display: flex; align-items: center; gap: 10px; padding: 0 16px;
+  }
+  .sample-badge { font-family: 'JetBrains Mono', monospace; font-size: 8px; background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1px 7px; border-radius: 2px; }
+  .rec-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #aaa; }
+  #statsbar .spacer { flex: 1; }
+  #loadBtn { padding: 3px 12px; background: #fff; border: 1px solid #ccc; color: #444; border-radius: 3px; font-size: 10px; cursor: pointer; font-family: 'Source Serif 4', serif; }
+  #loadBtn:hover { background: #f8f8f8; }
+  #fileInput { display: none; }
+
+  /* ── Body ── */
+  #body { flex: 1; display: flex; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: 260px; min-width: 260px;
+    background: #f8f8f5; border-right: 1px solid #ddd;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  #searchbox { padding: 9px 10px; border-bottom: 1px solid #e8e8e0; }
+  #searchbox input {
+    width: 100%; background: #fff; border: 1px solid #ccc;
+    padding: 5px 9px; border-radius: 4px; font-size: 12px; outline: none;
+    font-family: 'Source Serif 4', serif;
+  }
+  #filters { padding: 6px 8px; border-bottom: 1px solid #e8e8e0; display: flex; flex-wrap: wrap; gap: 3px; }
+  .filter-btn { padding: 2px 7px; border-radius: 3px; border: 1px solid #ccc; background: #fff; color: #666; font-size: 9px; cursor: pointer; font-family: 'Source Serif 4', serif; }
+  .filter-btn.active-all { background: #444; color: #fff; border-color: #444; }
+  #reccount { padding: 3px 10px; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #bbb; }
+  #fraglist { flex: 1; overflow-y: auto; }
+  .frag-item {
+    padding: 8px 10px; border-bottom: 1px solid #eeeee8;
+    cursor: pointer; border-left: 3px solid transparent;
+    transition: background .1s;
+  }
+  .frag-item:hover { background: #f0f0ec; }
+  .frag-item.selected { background: #fff; }
+  .frag-row1 { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; }
+  .frag-title { font-family: 'Noto Serif Hebrew', serif; font-size: 12px; color: #555; direction: rtl; max-width: 165px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .frag-item.selected .frag-title { color: #111; }
+  .frag-page { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #bbb; }
+  .frag-shelfmark { font-size: 9px; color: #999; margin-bottom: 4px; }
+  .frag-row3 { display: flex; justify-content: space-between; align-items: center; gap: 5px; }
+
+  /* Coverage bar */
+  .covbar-wrap { display: flex; align-items: center; gap: 4px; flex: 1; }
+  .covbar-track { flex: 1; height: 4px; background: #e4e4e0; border-radius: 2px; overflow: hidden; }
+  .covbar-fill { height: 100%; border-radius: 2px; transition: width .4s; }
+  .covbar-pct { font-family: 'JetBrains Mono', monospace; font-size: 9px; min-width: 28px; text-align: right; }
+
+  /* Corpus badge */
+  .badge { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 9px; font-weight: 600; white-space: nowrap; border: 1px solid; }
+
+  /* ── Main area ── */
+  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 10px; gap: 0; }
+  #panels { flex: 1; display: flex; gap: 8px; overflow: hidden; }
+  .panel { flex: 1; min-width: 0; background: #fff; border: 1px solid #ddd; border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; }
+  .panel-header { padding: 9px 13px; background: #fafaf8; border-bottom: 1px solid #e8e8e0; flex-shrink: 0; }
+  .panel-header h3 { font-size: 13px; font-weight: 700; margin-bottom: 1px; }
+  .panel-header .sub { font-size: 10px; color: #999; }
+  .panel-body { flex: 1; overflow: auto; padding: 10px; }
+
+  /* ── Image panel ── */
+  #imgpanel .panel-body { background: #f0f0ec; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  #ms-img { max-width: 100%; max-height: calc(100% - 50px); object-fit: contain; border: 1px solid #ccc; background: #fff; display: none; }
+  #img-loading { font-size: 11px; color: #aaa; font-style: italic; padding: 20px; }
+  #img-error { text-align: center; padding: 16px; display: none; }
+  #img-error .icon { font-size: 28px; margin-bottom: 8px; }
+  #img-error p { color: #888; font-size: 11px; margin-bottom: 10px; line-height: 1.5; }
+  .imglinks { display: flex; gap: 10px; justify-content: center; flex-shrink: 0; flex-wrap: wrap; }
+  .imglinks a { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #1060a0; text-decoration: none; border-bottom: 1px solid rgba(160,200,232,.5); }
+
+  /* ── Transcription panel ── */
+  .id-grid { background: #fafaf8; border: 1px solid #eee; border-radius: 5px; padding: 10px; margin-bottom: 10px; }
+  .id-grid-title { font-size: 9px; color: #bbb; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+  .id-row { display: flex; gap: 6px; margin-bottom: 3px; font-size: 10px; }
+  .id-key { color: #ccc; font-family: 'JetBrains Mono', monospace; min-width: 80px; }
+  .id-val { color: #333; font-family: 'JetBrains Mono', monospace; user-select: all; }
+  .not-embedded { background: #f8f6ff; border: 1px solid #d8d0f0; border-radius: 5px; padding: 12px; font-size: 12px; color: #444; line-height: 1.6; margin-bottom: 10px; }
+  .not-embedded strong { color: #6040b0; }
+  .htr-box { background: #fafaf8; border: 1px solid #eee; border-radius: 5px; padding: 10px; }
+  .htr-box input { width: 100%; background: #fff; border: 1px solid #ccc; padding: 4px 7px; border-radius: 3px; font-size: 10px; font-family: 'JetBrains Mono', monospace; outline: none; margin: 6px 0; }
+  .htr-box button { padding: 4px 12px; background: #6040b0; border: none; color: #fff; border-radius: 3px; font-size: 11px; cursor: pointer; }
+  .htr-box button:disabled { background: #eee; color: #aaa; cursor: default; }
+  .tx-text { font-family: 'Noto Serif Hebrew', serif; font-size: 16px; line-height: 2; color: #111; direction: rtl; text-align: right; white-space: pre-wrap; }
+
+  /* ── Sefaria panel ── */
+  .sef-placeholder { background: #fdf5ee; border: 1px solid #f0c898; border-radius: 5px; padding: 14px; margin-bottom: 12px; font-size: 12px; color: #444; line-height: 1.7; }
+  .sef-placeholder strong { color: #b05010; }
+  .sef-details { background: #fafaf8; border: 1px solid #eee; border-radius: 5px; padding: 10px; margin-bottom: 12px; }
+  .sef-link { color: #1060a0; text-decoration: none; font-size: 13px; border-bottom: 1px solid rgba(160,200,232,.5); }
+  .matched-strong { color: #217a47; font-weight: 700; }
+
+  /* ── Metadata bar ── */
+  #metabar {
+    background: #f8f8f5; border-top: 1px solid #e0e0d8;
+    padding: 6px 14px; display: flex; flex-wrap: wrap;
+    gap: 4px 16px; align-items: center; flex-shrink: 0;
+  }
+  .meta-pair { display: flex; gap: 4px; align-items: center; }
+  .meta-key { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #bbb; text-transform: uppercase; }
+  .meta-val { font-size: 11px; color: #555; }
+  #meta-title { margin-left: auto; font-family: 'Noto Serif Hebrew', serif; font-size: 12px; color: #777; direction: rtl; }
+
+  /* ── Empty state ── */
+  #empty { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px; color: #ccc; }
+  #empty .icon { font-size: 44px; }
+  #empty p { font-size: 14px; font-style: italic; }
+
+  /* ── Spinner ── */
+  .spinner { width: 20px; height: 20px; border: 2px solid #ddd; border-top-color: #555; border-radius: 50%; animation: spin .8s linear infinite; margin: 20px auto; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  a { color: #1060a0; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Header -->
+  <div id="header">
+    <span class="mono">MiDRASH · EPHE-PSL</span>
+    <div class="divider"></div>
+    <span class="title">Cairo Geniza → Sefaria Alignment Viewer</span>
+    <div class="spacer"></div>
+    <span class="mono">passim experiment · Prof. David Smith</span>
+  </div>
+
+  <!-- Stats bar -->
+  <div id="statsbar">
+    <span class="sample-badge" id="sampleBadge">SAMPLE DATA</span>
+    <span class="rec-count" id="recCount">0 records</span>
+    <div class="spacer"></div>
+    <button id="loadBtn" onclick="document.getElementById('fileInput').click()">📂 Load full TSV…</button>
+    <input type="file" id="fileInput" accept=".tsv,.txt,.csv">
+    <span class="mono" style="font-size:9px;color:#ccc">passim · Geniza→Sefaria · Exp.01</span>
+  </div>
+
+  <!-- Body -->
+  <div id="body">
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div id="searchbox"><input type="text" id="searchInput" placeholder="Search fragments…" oninput="render()"></div>
+      <div id="filters"></div>
+      <div id="reccount"></div>
+      <div id="fraglist"></div>
+    </div>
+
+    <!-- Main -->
+    <div id="main">
+      <div id="panels" style="display:none">
+
+        <!-- Image panel -->
+        <div class="panel" id="imgpanel">
+          <div class="panel-header">
+            <h3 style="color:#1060a0">🖼 Manuscript Image</h3>
+            <div class="sub" id="imgSub"></div>
+          </div>
+          <div class="panel-body">
+            <div id="img-loading">Loading image…</div>
+            <img id="ms-img" alt="Geniza fragment">
+            <div id="img-error">
+              <div class="icon">📜</div>
+              <p>Image not available from this domain.<br>Open directly in the NLI viewer.</p>
+              <a id="nli-link-err" href="#" target="_blank" rel="noreferrer" style="font-size:14px;font-weight:600">Open in NLI Viewer →</a>
+            </div>
+            <div class="imglinks" id="imglinks"></div>
+          </div>
+        </div>
+
+        <!-- Transcription panel -->
+        <div class="panel" id="txpanel">
+          <div class="panel-header">
+            <h3 style="color:#6040b0">✍️ Transcription</h3>
+            <div class="sub" id="txSub"></div>
+          </div>
+          <div class="panel-body" id="txBody"></div>
+        </div>
+
+        <!-- Sefaria panel -->
+        <div class="panel" id="sefpanel">
+          <div class="panel-header">
+            <h3 style="color:#b05010">📖 Sefaria Reference</h3>
+            <div class="sub" id="sefSub"></div>
+          </div>
+          <div class="panel-body" id="sefBody"></div>
+        </div>
+
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty">
+        <div class="icon">📜</div>
+        <p>Select a fragment from the list</p>
+      </div>
+
+      <!-- Metadata bar -->
+      <div id="metabar" style="display:none"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Corpus config ──────────────────────────────────────────────────────────
+const CC = {
+  tanakh:  { label:'Tanakh',         color:'#217a47', bg:'#eaf5ee', border:'#b2dcc0' },
+  mishnah: { label:'Mishnah',        color:'#6040b0', bg:'#f0ecfa', border:'#c8b8f0' },
+  talmud:  { label:'Talmud',         color:'#b05010', bg:'#fdf0e8', border:'#f0c898' },
+  liturgy: { label:'Liturgy',        color:'#1060a0', bg:'#e8f2fc', border:'#a8ccf0' },
+  mishneh: { label:'Mishneh Torah',  color:'#a02060', bg:'#fce8f2', border:'#f0a8cc' },
+  default: { label:'Other',          color:'#555',    bg:'#f4f4f4', border:'#ccc'    }
+};
+
+function getCorpus(src) { return src.split('_')[0]; }
+function getCfg(src) { return CC[getCorpus(src)] || CC.default; }
+function getSrcLabel(src) {
+  const p = src.split('_'), c = p[0];
+  if (c === 'tanakh')  return p.slice(1).map(x => x[0].toUpperCase()+x.slice(1)).join(' › ');
+  if (c === 'talmud')  return p.slice(1).filter(x => x!=='bavli'&&x!=='yerushalmi'&&!x.startsWith('Seder')).join(' › ') || p.slice(-1)[0];
+  return p[p.length-1];
+}
+function buildSefariaRef(f) {
+  const c = getCorpus(f.src);
+  if (c === 'mishneh' || c === 'liturgy') return null;
+  return f.sefaria_ref.split(' ').map(w => w[0].toUpperCase()+w.slice(1)).join('_');
+}
+function badgeHTML(src, sm) {
+  const c = getCfg(src);
+  const p = sm ? '1px 5px' : '2px 8px', fs = sm ? 9 : 10;
+  return `<span class="badge" style="color:${c.color};background:${c.bg};border-color:${c.border};padding:${p};font-size:${fs}px">${c.label}</span>`;
+}
+function covHTML(v) {
+  const p = Math.round(v*100);
+  const col = v>=0.9?'#217a47':v>=0.75?'#c07010':'#b03020';
+  return `<div class="covbar-wrap">
+    <div class="covbar-track"><div class="covbar-fill" style="width:${p}%;background:${col}"></div></div>
+    <span class="covbar-pct" style="color:${col}">${p}%</span>
+  </div>`;
+}
+function nliImgUrl(f) {
+  return `https://api.nli.org.il/openlibrary/api/iiif/${f.ie}!${f.page}/full/800,/0/default.jpg`;
+}
+function nliViewerUrl(f) {
+  return `https://www.nli.org.il/en/manuscripts/NNL_ALEPH${f.alma}/NLI`;
+}
+
+// ── Sample data ────────────────────────────────────────────────────────────
+const SAMPLE = [
+  {alma:'990000465650205171',ie:'39908278',page:'000001',lines:14,src:'tanakh_torah_deuteronomy',sefaria_ref:'deuteronomy',count:13,coverage:0.929,title:'תורה (דברים יד)',shelfmark:'Ms. Heb. 7208.7=4',date:'מאה טו',has_nli:true,has_fgp:false},
+  {alma:'990000571680205171',ie:'26807240',page:'000007',lines:61,src:'tanakh_prophets_joshua',sefaria_ref:'joshua',count:49,coverage:0.803,title:'נביאים ראשונים',shelfmark:'Ms. EVR II B 39',date:'0989',has_nli:false,has_fgp:true},
+  {alma:'990000571690205171',ie:'48364064',page:'000011',lines:59,src:'tanakh_torah_genesis',sefaria_ref:'genesis',count:54,coverage:0.915,title:'תורה (קטעים)',shelfmark:'Ms. EVR II B 59',date:'1022',has_nli:false,has_fgp:true},
+  {alma:'990000571700205171',ie:'47705655',page:'000005',lines:55,src:'tanakh_prophets_isaiah',sefaria_ref:'isaiah',count:53,coverage:0.964,title:'נביאים אחרונים',shelfmark:'Ms. EVR II B 116',date:'מאה יא',has_nli:false,has_fgp:true},
+  {alma:'990000432000205171',ie:'9346905',page:'000003',lines:24,src:'mishnah_Seder Zeraim_Mishnah Maaser Sheni',sefaria_ref:'Mishnah Maaser Sheni',count:22,coverage:0.917,title:'משנה סדר זרעים',shelfmark:'Ms. Heb. 5699=28',date:'מאה י',has_nli:true,has_fgp:true},
+  {alma:'990000898860205171',ie:'57628714',page:'000008',lines:67,src:'mishnah_Seder Tahorot_Mishnah Negaim',sefaria_ref:'Mishnah Negaim',count:61,coverage:0.91,title:'משנה סדר טהרות',shelfmark:'Ms. Evr. Antonin B 825',date:'מאה י-יא',has_nli:false,has_fgp:true},
+  {alma:'990000432020205171',ie:'9347023',page:'000004',lines:17,src:'talmud_bavli_Seder Nezikin_Sanhedrin',sefaria_ref:'Sanhedrin',count:15,coverage:0.882,title:'מעשיות מן התלמוד',shelfmark:'Ms. Heb. 5700=8',date:'מאה י-יא',has_nli:true,has_fgp:true},
+  {alma:'990000906660205171',ie:'36896882',page:'000006',lines:14,src:'talmud_bavli_Seder Moed_Yoma',sefaria_ref:'Yoma',count:13,coverage:0.929,title:'הלכות הריף (יומא)',shelfmark:'Ms. Evr. Antonin B 1122',date:'',has_nli:false,has_fgp:true},
+  {alma:'990000907460205171',ie:'36902743',page:'000004',lines:23,src:'talmud_yerushalmi_Seder Nezikin_Jerusalem Talmud Avodah Zarah',sefaria_ref:'Jerusalem Talmud Avodah Zarah',count:20,coverage:0.87,title:'תלמוד ירושלמי סדר נזיקין',shelfmark:'Ms. Evr. Antonin B 165',date:'',has_nli:false,has_fgp:true},
+  {alma:'990000622340205171',ie:'36388290',page:'000005',lines:19,src:'mishneh_torah',sefaria_ref:'torah',count:17,coverage:0.895,title:'משנה תורה (ספר אהבה)',shelfmark:'Ms. EVR II A 313/22',date:'מאה יד',has_nli:false,has_fgp:false},
+  {alma:'990000571740205171',ie:'47707087',page:'000044',lines:55,src:'liturgy_siddur',sefaria_ref:'siddur',count:47,coverage:0.855,title:'כתובים (קטעים)',shelfmark:'Ms. EVR II B 115',date:'0994',has_nli:false,has_fgp:true}
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let frags = SAMPLE;
+let isSample = true;
+let selected = null;
+let search = '';
+let corpusFilter = null;
+let htrUrl = '';
+
+// ── Filtered list ──────────────────────────────────────────────────────────
+function filtered() {
+  return frags.filter(f => {
+    if (corpusFilter && getCorpus(f.src) !== corpusFilter) return false;
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return f.title.toLowerCase().includes(q) || f.shelfmark.toLowerCase().includes(q) || f.ie.includes(q) || f.sefaria_ref.toLowerCase().includes(q);
+  });
+}
+
+// ── Build filter buttons ───────────────────────────────────────────────────
+function buildFilters() {
+  const corpora = [...new Set(frags.map(f => getCorpus(f.src)))].sort();
+  const wrap = document.getElementById('filters');
+  wrap.innerHTML = '';
+  // All button
+  const all = document.createElement('button');
+  all.className = 'filter-btn' + (!corpusFilter ? ' active-all' : '');
+  all.textContent = 'All';
+  all.onclick = () => { corpusFilter = null; render(); };
+  wrap.appendChild(all);
+  // Corpus buttons
+  corpora.forEach(c => {
+    const cfg = CC[c] || CC.default;
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = cfg.label;
+    btn.style.background = corpusFilter === c ? cfg.color : cfg.bg;
+    btn.style.color = corpusFilter === c ? '#fff' : cfg.color;
+    btn.style.borderColor = cfg.border;
+    btn.onclick = () => { corpusFilter = corpusFilter === c ? null : c; render(); };
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Render fragment list ───────────────────────────────────────────────────
+function render() {
+  search = document.getElementById('searchInput').value;
+  buildFilters();
+  const list = filtered();
+  document.getElementById('reccount').textContent = `${list.length} / ${frags.length}`;
+  document.getElementById('recCount').textContent = `${frags.length.toLocaleString()} records`;
+  document.getElementById('sampleBadge').style.display = isSample ? 'inline' : 'none';
+
+  const wrap = document.getElementById('fraglist');
+  wrap.innerHTML = '';
+  list.forEach(f => {
+    const isSel = selected && selected.ie === f.ie && selected.page === f.page;
+    const cfg = getCfg(f.src);
+    const div = document.createElement('div');
+    div.className = 'frag-item' + (isSel ? ' selected' : '');
+    div.style.borderLeftColor = isSel ? cfg.color : 'transparent';
+    const srcLabel = getSrcLabel(f.src);
+    div.innerHTML = `
+      <div class="frag-row1">
+        <span class="frag-title" style="font-family:'Source Serif 4',serif;font-size:12px;direction:ltr;text-align:left;color:inherit">${srcLabel}</span>
+        <span class="frag-page">p.${parseInt(f.page,10)}</span>
+      </div>
+      <div class="frag-shelfmark">${f.shelfmark}${f.date ? ' · '+f.date : ''}</div>
+      <div class="frag-row3">${badgeHTML(f.src, true)}${covHTML(f.coverage)}</div>
+    `;
+    div.onclick = () => selectFrag(f);
+    wrap.appendChild(div);
+  });
+}
+
+// ── Select fragment ────────────────────────────────────────────────────────
+function selectFrag(f) {
+  selected = f;
+  render();
+  showPanels(f);
+}
+
+// ── Show panels ────────────────────────────────────────────────────────────
+function showPanels(f) {
+  document.getElementById('panels').style.display = 'flex';
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('metabar').style.display = 'flex';
+
+  showImage(f);
+  showTranscription(f);
+  showSefaria(f);
+  showMeta(f);
+}
+
+// ── Image panel ────────────────────────────────────────────────────────────
+function showImage(f) {
+  const pg = parseInt(f.page, 10);
+  document.getElementById('imgSub').textContent = `Page ${pg} · IE: ${f.ie} · ${f.shelfmark}`;
+
+  const iframe = document.getElementById('nli-iframe');
+  const loading = document.getElementById('img-loading');
+  const err = document.getElementById('img-error');
+
+  iframe.style.display = 'none';
+  err.style.display = 'none';
+  loading.style.display = 'block';
+  loading.textContent = 'Loading manuscript image…';
+
+  const nliViewer = nliViewerUrl(f);
+  document.getElementById('nli-link-err').href = nliViewer;
+
+  let linksHtml = `<a href="${nliViewer}" target="_blank" rel="noreferrer">Open in NLI ↗</a>`;
+  if (f.has_fgp) linksHtml += ` <a href="https://fjms.genizah.org/" target="_blank" rel="noreferrer">FGP ↗</a>`;
+  document.getElementById('imglinks').innerHTML = linksHtml;
+
+  // Use iiif.nli.org.il with ALMA number — same approach as Dicta GenizahSearch
+  const manifestUrl = `https://iiif.nli.org.il/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
+
+  fetch(manifestUrl)
+    .then(r => r.json())
+    .then(manifest => {
+      const canvases = manifest?.sequences?.[0]?.canvases || [];
+      // page field is 1-indexed zero-padded string, canvas is 0-indexed
+      const idx = Math.max(0, pg - 1);
+      const canvas = canvases[idx] || canvases[0];
+      const flId = canvas?.['@id']?.split('/').pop(); // e.g. FL39908288
+      if (!flId) throw new Error('No FL ID found');
+      const imgUrl = `https://iiif.nli.org.il/IIIFv21/${flId}/full/max/0/default.jpg`;
+      // Now load as <img> inside the iframe div area
+      // Replace iframe with an img element
+      const imgEl = document.getElementById('nli-img');
+      imgEl.src = imgUrl;
+      imgEl.onload = () => {
+        loading.style.display = 'none';
+        imgEl.style.display = 'block';
+      };
+      imgEl.onerror = () => {
+        loading.style.display = 'none';
+        err.style.display = 'block';
+      };
+    })
+    .catch(() => {
+      loading.style.display = 'none';
+      err.style.display = 'block';
+    });
+}
+
+// ── Transcription panel ────────────────────────────────────────────────────
+function showTranscription(f) {
+  const pg = parseInt(f.page, 10);
+  document.getElementById('txSub').textContent = `${f.lines} lines on page · IE ${f.ie}`;
+  document.getElementById('txBody').innerHTML = `
+    <div class="not-embedded">
+      <strong>📋 Transcription not embedded</strong><br>
+      The passim TSV records alignment results only, not the raw transcription text.
+      Connect your HTR server below to fetch it.
+    </div>
+    <div class="id-grid">
+      <div class="id-grid-title">Fragment identifiers</div>
+      ${[['IE',f.ie],['ALMA',f.alma],['Page',`${pg} (${f.page})`],['Lines',f.lines],['Shelfmark',f.shelfmark]].map(([k,v])=>`
+        <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
+      `).join('')}
+    </div>
+    <div class="htr-box">
+      <div class="id-grid-title">HTR Server (optional)</div>
+      <div style="font-size:10px;color:#bbb;margin:4px 0">Use <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{ie}</code> and <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{page}</code> as placeholders</div>
+      <input type="text" id="htrInput" value="${htrUrl}" placeholder="https://your-server/{ie}/{page}" oninput="htrUrl=this.value">
+      <button onclick="fetchHTR('${f.ie}','${f.page}')" id="htrBtn">Fetch</button>
+    </div>
+    <div id="txResult" style="margin-top:10px"></div>
+  `;
+}
+
+function fetchHTR(ie, page) {
+  const url = htrUrl.replace('{ie}', ie).replace('{page}', page);
+  if (!url) return;
+  document.getElementById('htrBtn').disabled = true;
+  document.getElementById('htrBtn').textContent = 'Loading…';
+  fetch(url)
+    .then(r => r.text())
+    .then(t => {
+      document.getElementById('txResult').innerHTML = `<div class="tx-text">${t}</div>`;
+    })
+    .catch(e => {
+      document.getElementById('txResult').textContent = 'Error: ' + e.message;
+    })
+    .finally(() => {
+      document.getElementById('htrBtn').disabled = false;
+      document.getElementById('htrBtn').textContent = 'Fetch';
+    });
+}
+
+// ── Sefaria panel ──────────────────────────────────────────────────────────
+function showSefaria(f) {
+  const ref = buildSefariaRef(f);
+  const sefariaUrl = ref
+    ? `https://www.sefaria.org/${ref}`
+    : `https://www.sefaria.org/search#${encodeURIComponent(f.sefaria_ref)}`;
+
+  document.getElementById('sefSub').innerHTML =
+    `${ref || f.sefaria_ref} · <span class="matched-strong">${f.count}/${f.lines} lines matched</span>`;
+
+  document.getElementById('sefBody').innerHTML = `
+    <div class="sef-placeholder">
+      <strong>📖 Sefaria text — coming soon</strong><br>
+      This panel will show the Hebrew text matched by passim. The matched source is
+      <strong>${ref || f.sefaria_ref}</strong>, with
+      <span class="matched-strong">${f.count} of ${f.lines} lines</span> aligned.
+    </div>
+    <div class="sef-details">
+      <div class="id-grid-title">Alignment details</div>
+      ${[['Sefaria ref',ref||f.sefaria_ref],['Corpus',getCorpus(f.src)],['Lines matched',`${f.count} / ${f.lines}`],['Coverage',`${Math.round(f.coverage*100)}%`]].map(([k,v])=>`
+        <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
+      `).join('')}
+    </div>
+    <a class="sef-link" href="${sefariaUrl}" target="_blank" rel="noreferrer">Read full text on Sefaria →</a>
+  `;
+}
+
+// ── Metadata bar ───────────────────────────────────────────────────────────
+function showMeta(f) {
+  const bar = document.getElementById('metabar');
+  const items = [
+    ['Shelfmark', f.shelfmark],
+    ['Source', getSrcLabel(f.src)],
+    ['Date', f.date || '—'],
+    ['Matched', `${f.count}/${f.lines}`],
+    ['Coverage', `${Math.round(f.coverage*100)}%`],
+    ['IE', f.ie]
+  ];
+  bar.innerHTML = badgeHTML(f.src, false) +
+    items.filter(([,v])=>v).map(([k,v]) => `
+      <div class="meta-pair">
+        <span class="meta-key">${k}</span>
+        <span class="meta-val">${v}</span>
+      </div>
+    `).join('') +
+    `<span id="meta-title" title="Hebrew manuscript title">${f.title}</span>`;
+}
+
+// ── Load full TSV ──────────────────────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  document.getElementById('loadBtn').textContent = 'Loading…';
+  Papa.parse(file, {
+    header: true, delimiter: '\t', skipEmptyLines: true,
+    complete: function(result) {
+      const rows = result.data.map(row => {
+        const sm = (row['942_z___shelfmark___664094___893288'] || '').split('|||');
+        const lib = row['942_a___library___1571___898555'] || '';
+        const sp = (row.src || '').split('_');
+        const tk = Object.keys(row).find(k => k.startsWith('245_a'));
+        const dk = Object.keys(row).find(k => k.startsWith('260_c'));
+        return {
+          alma: row.ALMA||'', ie: row.IE||'', page: row.page||'',
+          lines: +row.lines||0, src: row.src||'',
+          sefaria_ref: sp[sp.length-1]?.trim()||'',
+          count: +row.count||0, coverage: +row.coverage||0,
+          title: (tk ? row[tk] : '').trim(),
+          shelfmark: sm[0]?.trim()||'',
+          date: ((dk ? row[dk] : '')||'').trim().slice(0,40),
+          has_nli: lib.includes('National Library of Israel'),
+          has_fgp: lib.includes('Friedberg')
+        };
+      }).filter(r => r.ie && r.src && r.coverage >= 0.5);
+      frags = rows;
+      isSample = false;
+      selected = rows[0] || null;
+      corpusFilter = null;
+      render();
+      if (selected) showPanels(selected);
+      document.getElementById('loadBtn').textContent = '📂 Load full TSV…';
+    },
+    error: function() {
+      document.getElementById('loadBtn').textContent = '📂 Load full TSV…';
+    }
+  });
+});
+
+// ── Init ───────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
