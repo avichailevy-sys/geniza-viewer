@@ -192,7 +192,7 @@
             <img id="nli-img" alt="Geniza fragment" style="max-width:100%;max-height:calc(100% - 50px);object-fit:contain;border:1px solid #ccc;background:#fff;display:none;">
             <div id="img-error" style="display:none;">
               <div class="icon">📜</div>
-              <p>Image could not be loaded.<br>Open directly in the NLI viewer.</p>
+              <p id="img-error-msg">Image could not be loaded.<br>Open directly in the NLI viewer.</p>
               <a id="nli-link-err" href="#" target="_blank" rel="noreferrer" style="font-size:14px;font-weight:600">Open in NLI Viewer →</a>
             </div>
             <div class="imglinks" id="imglinks"></div>
@@ -402,48 +402,52 @@ function showImage(f) {
 
   const loading = document.getElementById('img-loading');
   const err = document.getElementById('img-error');
+  const imgEl = document.getElementById('nli-img');
 
+  // Reset
   err.style.display = 'none';
+  imgEl.style.display = 'none';
   loading.style.display = 'block';
-  loading.textContent = 'Loading manuscript image…';
 
   const nliViewer = nliViewerUrl(f);
   document.getElementById('nli-link-err').href = nliViewer;
 
-  let linksHtml = `<a href="${nliViewer}" target="_blank" rel="noreferrer">Open in NLI ↗</a>`;
+  let linksHtml = '';
+  if (f.has_nli) linksHtml += `<a href="${nliViewer}" target="_blank" rel="noreferrer">NLI Viewer ↗</a>`;
   if (f.has_fgp) linksHtml += ` <a href="https://fjms.genizah.org/" target="_blank" rel="noreferrer">FGP ↗</a>`;
   document.getElementById('imglinks').innerHTML = linksHtml;
 
-  // Use iiif.nli.org.il with ALMA number — same approach as Dicta GenizahSearch
-  const manifestUrl = `https://iiif.nli.org.il/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
+  // Only attempt NLI IIIF if fragment is held by NLI
+  if (!f.has_nli) {
+    loading.style.display = 'none';
+    // Show appropriate message based on where the fragment is held
+    const institution = f.shelfmark.startsWith('Ms. Evr.') || f.shelfmark.startsWith('Ms. EVR')
+      ? 'Russian National Library (St. Petersburg)'
+      : f.has_fgp ? 'partner institution' : 'another institution';
+    document.getElementById('img-error-msg').innerHTML =
+      `Image held by <strong>${institution}</strong>.<br>` +
+      (f.has_fgp ? 'View on FGP:' : 'Not available for direct display.');
+    err.style.display = 'block';
+    return;
+  }
 
+  loading.textContent = 'Loading manuscript image…';
+
+  const manifestUrl = `https://iiif.nli.org.il/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
   fetch(manifestUrl)
     .then(r => r.json())
     .then(manifest => {
       const canvases = manifest?.sequences?.[0]?.canvases || [];
-      // page field is 1-indexed zero-padded string, canvas is 0-indexed
       const idx = Math.max(0, pg - 1);
       const canvas = canvases[idx] || canvases[0];
-      const flId = canvas?.['@id']?.split('/').pop(); // e.g. FL39908288
+      const flId = canvas?.['@id']?.split('/').pop();
       if (!flId) throw new Error('No FL ID found');
       const imgUrl = `https://iiif.nli.org.il/IIIFv21/${flId}/full/max/0/default.jpg`;
-      // Now load as <img> inside the iframe div area
-      // Replace iframe with an img element
-      const imgEl = document.getElementById('nli-img');
       imgEl.src = imgUrl;
-      imgEl.onload = () => {
-        loading.style.display = 'none';
-        imgEl.style.display = 'block';
-      };
-      imgEl.onerror = () => {
-        loading.style.display = 'none';
-        err.style.display = 'block';
-      };
+      imgEl.onload = () => { loading.style.display = 'none'; imgEl.style.display = 'block'; };
+      imgEl.onerror = () => { loading.style.display = 'none'; err.style.display = 'block'; };
     })
-    .catch(() => {
-      loading.style.display = 'none';
-      err.style.display = 'block';
-    });
+    .catch(() => { loading.style.display = 'none'; err.style.display = 'block'; });
 }
 
 // ── Transcription panel ────────────────────────────────────────────────────
