@@ -390,11 +390,9 @@ function showImage(f) {
   const pg = parseInt(f.page, 10);
   document.getElementById('imgSub').textContent = `Page ${pg} · IE: ${f.ie} · ${f.shelfmark}`;
 
-  const iframe = document.getElementById('nli-iframe');
   const loading = document.getElementById('img-loading');
   const err = document.getElementById('img-error');
 
-  iframe.style.display = 'none';
   err.style.display = 'none';
   loading.style.display = 'block';
   loading.textContent = 'Loading manuscript image…';
