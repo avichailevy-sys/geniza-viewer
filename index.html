@@ -388,36 +388,46 @@ function showPanels(f) {
 // ── Image panel ────────────────────────────────────────────────────────────
 function showImage(f) {
   const pg = parseInt(f.page, 10);
-  document.getElementById('imgSub').textContent = `Page ${pg} · NLI IE: ${f.ie} · Shelfmark: ${f.shelfmark}`;
+  document.getElementById('imgSub').textContent = `Page ${pg} · IE: ${f.ie} · ${f.shelfmark}`;
 
-  const img = document.getElementById('ms-img');
+  const iframe = document.getElementById('nli-iframe');
   const loading = document.getElementById('img-loading');
   const err = document.getElementById('img-error');
 
-  img.style.display = 'none';
+  iframe.style.display = 'none';
   err.style.display = 'none';
   loading.style.display = 'block';
 
-  // Build links
   const nliViewer = nliViewerUrl(f);
   document.getElementById('nli-link-err').href = nliViewer;
-  let linksHtml = `<a href="${nliViewer}" target="_blank" rel="noreferrer">NLI Viewer ↗</a>`;
+
+  let linksHtml = `<a href="${nliViewer}" target="_blank" rel="noreferrer">Open in NLI ↗</a>`;
   if (f.has_fgp) linksHtml += ` <a href="https://fjms.genizah.org/" target="_blank" rel="noreferrer">FGP ↗</a>`;
   document.getElementById('imglinks').innerHTML = linksHtml;
 
-  // Try loading image directly — no fetch, just <img> tag
-  const url = nliImgUrl(f);
-  img.src = url;
-  img.onload = () => {
+  // Try embedding NLI viewer in iframe
+  iframe.src = '';
+  iframe.onload = () => {
+    // iframe loaded something — show it
     loading.style.display = 'none';
-    img.style.display = 'block';
-    err.style.display = 'none';
+    iframe.style.display = 'block';
   };
-  img.onerror = () => {
+  iframe.onerror = () => {
     loading.style.display = 'none';
-    img.style.display = 'none';
     err.style.display = 'block';
   };
+  // Short delay then set src — gives browser time to reset
+  setTimeout(() => {
+    iframe.src = nliViewer;
+  }, 100);
+
+  // Fallback: if iframe doesn't fire onload in 8 seconds, show error
+  setTimeout(() => {
+    if (iframe.style.display === 'none') {
+      loading.style.display = 'none';
+      err.style.display = 'block';
+    }
+  }, 8000);
 }
 
 // ── Transcription panel ────────────────────────────────────────────────────
