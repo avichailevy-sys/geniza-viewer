@@ -189,11 +189,11 @@
             <div class="sub" id="imgSub"></div>
           </div>
           <div class="panel-body">
-            <div id="img-loading">Loading image…</div>
-            <img id="ms-img" alt="Geniza fragment">
-            <div id="img-error">
+            <div id="img-loading">Loading manuscript image…</div>
+            <img id="nli-img" alt="Geniza fragment" style="max-width:100%;max-height:calc(100% - 50px);object-fit:contain;border:1px solid #ccc;background:#fff;display:none;">
+            <div id="img-error" style="display:none;">
               <div class="icon">📜</div>
-              <p>Image not available from this domain.<br>Open directly in the NLI viewer.</p>
+              <p>Image could not be loaded.<br>Open directly in the NLI viewer.</p>
               <a id="nli-link-err" href="#" target="_blank" rel="noreferrer" style="font-size:14px;font-weight:600">Open in NLI Viewer →</a>
             </div>
             <div class="imglinks" id="imglinks"></div>
