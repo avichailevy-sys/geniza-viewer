@@ -298,6 +298,8 @@ function nliViewerUrl(f) {
 let frags = [];
 let isSample = false;
 let selected = null;
+let transcriptions = {};
+let txLoaded = false;
 let search = '';
 let corpusFilter = null;
 let htrUrl = '';
@@ -456,6 +458,37 @@ function showTranscription(f) {
   const pg = parseInt(f.page, 10);
   document.getElementById('txSub').textContent = `${f.lines} lines on page · IE ${f.ie}`;
 
+  // Check if we have a transcription for this fragment
+  const txKey = f.ie + '_' + pg;
+  const txText = transcriptions[txKey];
+
+  // If transcriptions file is still loading, show a waiting message
+  if (!txLoaded && Object.keys(transcriptions).length === 0) {
+    // Will be refreshed once loaded - set a timer to retry
+    setTimeout(() => { if (selected && selected.ie === f.ie) showTranscription(f); }, 2000);
+  }
+
+  if (txText) {
+    const catalogFields = [
+      ['Title', f.title],['Subtitle', f.subtitle],['Date', f.date],
+      ['Custodial history', f.custodial],['Uniform title', f.uniform_title],
+      ['Publications', f.publications],['Language', f.language],
+    ].filter(([k,v]) => v && typeof v === 'string' && v.trim().length > 0);
+    const catalogHTML = catalogFields.length > 0 ? `
+      <div class="id-grid" style="border:1px solid #b2dcc0;background:#f4faf4;margin-top:10px;">
+        <div class="id-grid-title" style="color:#217a47">📚 Catalog information</div>
+        ${catalogFields.map(([k,v]) => `<div class="id-row"><span class="id-key" style="color:#aaa">${k}</span><span class="id-val" style="color:#333;font-family:'Source Serif 4',serif;direction:rtl;text-align:right;font-size:11px;white-space:normal">${v}</span></div>`).join('')}
+      </div>` : '';
+    document.getElementById('txBody').innerHTML = `
+      <div style="background:#f8f6ff;border:1px solid #d8d0f0;border-radius:5px;padding:10px;margin-bottom:10px;font-size:11px;color:#666">
+        ✍️ Transcription from passim input corpus
+      </div>
+      <div style="font-family:'Noto Serif Hebrew',serif;font-size:16px;line-height:2;color:#111;direction:rtl;text-align:right;white-space:pre-wrap;padding:8px 0">${txText}</div>
+      ${catalogHTML}
+    `;
+    return;
+  }
+
   const catalogFields = [
     ['Title', f.title],
     ['Subtitle', f.subtitle],
@@ -604,6 +637,12 @@ function parseRows(data) {
 
 document.getElementById('recCount').textContent = 'Loading…';
 document.getElementById('sampleBadge').style.display = 'none';
+
+// Fetch transcriptions.json in background
+fetch('https://drive.google.com/uc?export=download&id=1bw5GDrDqX2S65YBbbFN0xm-8ijD3rx3T')
+  .then(r => { if (!r.ok) throw new Error('not found'); return r.json(); })
+  .then(data => { transcriptions = data; txLoaded = true; console.log('Transcriptions loaded:', Object.keys(data).length); })
+  .catch(e => console.log('Transcriptions not available:', e.message));
 
 fetch('data.tsv')
   .then(r => { if (!r.ok) throw new Error('not found'); return r.text(); })
