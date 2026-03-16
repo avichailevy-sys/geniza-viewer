@@ -425,8 +425,9 @@ function showImage(f) {
       ? 'Russian National Library (St. Petersburg)'
       : f.has_fgp ? 'a partner institution' : 'another institution';
     document.getElementById('img-error-msg').innerHTML =
-      `Image held by <strong>${institution}</strong> — access-restricted via IIIF.<br>` +
-      `Click below to view in the NLI viewer.`;
+      `Image held by <strong>${institution}</strong>.<br>` +
+      `This image cannot be displayed here due to authorization restrictions on the IIIF server.<br>` +
+      `Use the links below to view it externally.`;
     err.style.display = 'block';
     return;
   }
