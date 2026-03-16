@@ -450,6 +450,28 @@ function showImage(f) {
 function showTranscription(f) {
   const pg = parseInt(f.page, 10);
   document.getElementById('txSub').textContent = `${f.lines} lines on page · IE ${f.ie}`;
+
+  const catalogFields = [
+    ['Title', f.title],
+    ['Subtitle', f.subtitle],
+    ['Date', f.date],
+    ['Custodial history', f.custodial],
+    ['Uniform title', f.uniform_title],
+    ['Publications', f.publications],
+    ['Language', f.language],
+  ].filter(([k,v]) => v && typeof v === 'string' && v.trim().length > 0);
+
+  const catalogHTML = catalogFields.length > 0 ? `
+    <div class="id-grid" style="border:1px solid #b2dcc0;background:#f4faf4;">
+      <div class="id-grid-title" style="color:#217a47">📚 Catalog information</div>
+      ${catalogFields.map(([k,v]) => `
+        <div class="id-row">
+          <span class="id-key" style="color:#aaa">${k}</span>
+          <span class="id-val" style="color:#333;font-family:'Source Serif 4',serif;direction:rtl;text-align:right;font-size:11px;white-space:normal">${v}</span>
+        </div>
+      `).join('')}
+    </div>` : '';
+
   document.getElementById('txBody').innerHTML = `
     <div class="not-embedded">
       <strong>📋 Transcription not embedded</strong><br>
@@ -462,6 +484,7 @@ function showTranscription(f) {
         <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
       `).join('')}
     </div>
+    ${catalogHTML}
     <div class="htr-box">
       <div class="id-grid-title">HTR Server (optional)</div>
       <div style="font-size:10px;color:#bbb;margin:4px 0">Use <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{ie}</code> and <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{page}</code> as placeholders</div>
