@@ -162,8 +162,7 @@
     <span class="sample-badge" id="sampleBadge">SAMPLE DATA</span>
     <span class="rec-count" id="recCount">0 records</span>
     <div class="spacer"></div>
-    <button id="loadBtn" onclick="document.getElementById('fileInput').click()">📂 Load full TSV…</button>
-    <input type="file" id="fileInput" accept=".tsv,.txt,.csv">
+
     <span class="mono" style="font-size:9px;color:#ccc">passim · Geniza→Sefaria · Exp.01</span>
   </div>
 
@@ -530,47 +529,46 @@ function showMeta(f) {
 }
 
 // ── Load full TSV ──────────────────────────────────────────────────────────
-document.getElementById('fileInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  document.getElementById('loadBtn').textContent = 'Loading…';
-  Papa.parse(file, {
-    header: true, delimiter: '\t', skipEmptyLines: true,
-    complete: function(result) {
-      const rows = result.data.map(row => {
-        const sm = (row['942_z___shelfmark___664094___893288'] || '').split('|||');
-        const lib = row['942_a___library___1571___898555'] || '';
-        const sp = (row.src || '').split('_');
-        const tk = Object.keys(row).find(k => k.startsWith('245_a'));
-        const dk = Object.keys(row).find(k => k.startsWith('260_c'));
-        return {
-          alma: row.ALMA||'', ie: row.IE||'', page: row.page||'',
-          lines: +row.lines||0, src: row.src||'',
-          sefaria_ref: sp[sp.length-1]?.trim()||'',
-          count: +row.count||0, coverage: +row.coverage||0,
-          title: (tk ? row[tk] : '').trim(),
-          shelfmark: sm[0]?.trim()||'',
-          date: ((dk ? row[dk] : '')||'').trim().slice(0,40),
-          has_nli: lib.includes('National Library of Israel'),
-          has_fgp: lib.includes('Friedberg')
-        };
-      }).filter(r => r.ie && r.src && r.coverage >= 0.5);
-      frags = rows;
-      isSample = false;
-      selected = rows[0] || null;
-      corpusFilter = null;
-      render();
-      if (selected) showPanels(selected);
-      document.getElementById('loadBtn').textContent = '📂 Load full TSV…';
-    },
-    error: function() {
-      document.getElementById('loadBtn').textContent = '📂 Load full TSV…';
-    }
-  });
-});
 
-// ── Init ───────────────────────────────────────────────────────────────────
-render();
+
+// ── Init — auto-load data.tsv from same server ────────────────────────────
+function parseRows(data) {
+  return data.map(row => {
+    const sm = (row['942_z___shelfmark___664094___893288'] || '').split('|||');
+    const lib = row['942_a___library___1571___898555'] || '';
+    const sp = (row.src || '').split('_');
+    const tk = Object.keys(row).find(k => k.startsWith('245_a'));
+    const dk = Object.keys(row).find(k => k.startsWith('260_c'));
+    return {
+      alma: row.ALMA||'', ie: row.IE||'', page: row.page||'',
+      lines: +row.lines||0, src: row.src||'',
+      sefaria_ref: sp[sp.length-1]?.trim()||'',
+      count: +row.count||0, coverage: +row.coverage||0,
+      title: (tk ? row[tk] : '').trim(),
+      shelfmark: sm[0]?.trim()||'',
+      date: ((dk ? row[dk] : '')||'').trim().slice(0,40),
+      has_nli: lib.includes('National Library of Israel'),
+      has_fgp: lib.includes('Friedberg')
+    };
+  }).filter(r => r.ie && r.src && r.coverage >= 0.5);
+}
+
+document.getElementById('recCount').textContent = 'Loading…';
+document.getElementById('sampleBadge').style.display = 'none';
+
+fetch('data.tsv')
+  .then(r => { if (!r.ok) throw new Error('not found'); return r.text(); })
+  .then(text => {
+    Papa.parse(text, {
+      header: true, delimiter: '\t', skipEmptyLines: true,
+      complete: function(result) {
+        const rows = parseRows(result.data);
+        if (rows.length > 0) { frags = rows; isSample = false; selected = null; }
+        render();
+      }
+    });
+  })
+  .catch(() => { render(); });
 </script>
 </body>
 </html>
