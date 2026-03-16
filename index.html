@@ -638,11 +638,15 @@ function parseRows(data) {
 document.getElementById('recCount').textContent = 'Loading…';
 document.getElementById('sampleBadge').style.display = 'none';
 
-// Fetch transcriptions.json in background
-fetch('https://drive.google.com/uc?export=download&id=1bw5GDrDqX2S65YBbbFN0xm-8ijD3rx3T')
-  .then(r => { if (!r.ok) throw new Error('not found'); return r.json(); })
-  .then(data => { transcriptions = data; txLoaded = true; console.log('Transcriptions loaded:', Object.keys(data).length); })
-  .catch(e => console.log('Transcriptions not available:', e.message));
+// Fetch transcriptions in two parts and merge
+Promise.all([
+  fetch('tx1.json').then(r => r.json()),
+  fetch('tx2.json').then(r => r.json())
+]).then(([t1, t2]) => {
+  transcriptions = Object.assign({}, t1, t2);
+  txLoaded = true;
+  console.log('Transcriptions loaded:', Object.keys(transcriptions).length);
+}).catch(e => console.log('Transcriptions not available:', e.message));
 
 fetch('data.tsv')
   .then(r => { if (!r.ok) throw new Error('not found'); return r.text(); })
