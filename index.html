@@ -550,12 +550,22 @@ function parseRows(data) {
     const sp = (row.src || '').split('_');
     const tk = Object.keys(row).find(k => k.startsWith('245_a'));
     const dk = Object.keys(row).find(k => k.startsWith('260_c'));
+    const bk = Object.keys(row).find(k => k.startsWith('245_b'));
+    const sk = Object.keys(row).find(k => k.startsWith('581_a'));
+    const ck = Object.keys(row).find(k => k.startsWith('561_a'));
+    const upk = Object.keys(row).find(k => k.startsWith('730_p'));
+    const lank = Object.keys(row).find(k => k.startsWith('041_a'));
     return {
       alma: row.ALMA||'', ie: row.IE||'', page: row.page||'',
       lines: +row.lines||0, src: row.src||'',
       sefaria_ref: sp[sp.length-1]?.trim()||'',
       count: +row.count||0, coverage: +row.coverage||0,
       title: (tk ? row[tk] : '').trim(),
+      subtitle: (bk ? row[bk] : '').trim(),
+      publications: (sk ? row[sk] : '').trim().slice(0,300),
+      custodial: (ck ? row[ck] : '').trim().slice(0,200),
+      uniform_title: (upk ? row[upk] : '').trim(),
+      language: (lank ? row[lank] : '').trim(),
       shelfmark: sm[0]?.trim()||'',
       date: ((dk ? row[dk] : '')||'').trim().slice(0,40),
       has_nli: lib.includes('National Library of Israel'),
