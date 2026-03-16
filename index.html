@@ -235,12 +235,14 @@
 <script>
 // ── Corpus config ──────────────────────────────────────────────────────────
 const CC = {
-  tanakh:  { label:'Tanakh',         color:'#217a47', bg:'#eaf5ee', border:'#b2dcc0' },
-  mishnah: { label:'Mishnah',        color:'#6040b0', bg:'#f0ecfa', border:'#c8b8f0' },
-  talmud:  { label:'Talmud',         color:'#b05010', bg:'#fdf0e8', border:'#f0c898' },
-  liturgy: { label:'Liturgy',        color:'#1060a0', bg:'#e8f2fc', border:'#a8ccf0' },
-  mishneh: { label:'Mishneh Torah',  color:'#a02060', bg:'#fce8f2', border:'#f0a8cc' },
-  default: { label:'Other',          color:'#555',    bg:'#f4f4f4', border:'#ccc'    }
+  tanakh:   { label:'Tanakh',        color:'#217a47', bg:'#eaf5ee', border:'#b2dcc0' },
+  mishnah:  { label:'Mishnah',       color:'#6040b0', bg:'#f0ecfa', border:'#c8b8f0' },
+  talmud:   { label:'Talmud',        color:'#b05010', bg:'#fdf0e8', border:'#f0c898' },
+  liturgy:  { label:'Liturgy',       color:'#1060a0', bg:'#e8f2fc', border:'#a8ccf0' },
+  mishneh:  { label:'Mishneh Torah', color:'#a02060', bg:'#fce8f2', border:'#f0a8cc' },
+  zohar:    { label:'Zohar',         color:'#7a5c00', bg:'#fdf5dc', border:'#e0c870' },
+  bible:    { label:'Bible',         color:'#217a47', bg:'#eaf5ee', border:'#b2dcc0' },
+  default:  { label:'Other',         color:'#555',    bg:'#f4f4f4', border:'#ccc'    }
 };
 
 function getCorpus(src) { return src.split('_')[0]; }
@@ -345,7 +347,15 @@ function render() {
 
   const wrap = document.getElementById('fraglist');
   wrap.innerHTML = '';
-  list.forEach(f => {
+  const MAX_DISPLAY = 500;
+  const displayList = list.slice(0, MAX_DISPLAY);
+  if (list.length > MAX_DISPLAY) {
+    const note = document.createElement('div');
+    note.style.cssText = 'padding:8px 10px;font-size:10px;color:#aaa;font-style:italic;border-bottom:1px solid #eee';
+    note.textContent = `Showing first ${MAX_DISPLAY} of ${list.length} matches. Use search or filters to narrow down.`;
+    wrap.appendChild(note);
+  }
+  displayList.forEach(f => {
     const isSel = selected && selected.ie === f.ie && selected.page === f.page;
     const cfg = getCfg(f.src);
     const div = document.createElement('div');
