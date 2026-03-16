@@ -256,7 +256,8 @@ function getCorpus(src) {
       lower.includes('sifrei') || lower.includes('bereshit') || lower.includes('yalkut') ||
       lower.includes('ein yaakov') || lower.includes('pirkei') || lower.includes('tanna') ||
       lower.includes('pesikta') || lower.includes('shemot') || lower.includes('kohelet') ||
-      lower.includes('otzar') || lower.includes('seder olam') || lower.includes('rabbah')) return 'midrash';
+      lower.includes('otzar') || lower.includes('seder olam') || lower.includes('rabbah') ||
+      lower.includes('mishnat') || lower.includes('ruth') || lower.includes('eikh')) return 'midrash';
   return c;
 }
 function getCfg(src) { return CC[getCorpus(src)] || CC.default; }
@@ -414,9 +415,8 @@ function showImage(f) {
   const nliViewer = nliViewerUrl(f);
   document.getElementById('nli-link-err').href = nliViewer;
 
-  let linksHtml = '';
-  if (f.has_nli) linksHtml += `<a href="${nliViewer}" target="_blank" rel="noreferrer">NLI Viewer ↗</a>`;
-  if (f.has_fgp) linksHtml += ` <a href="https://fjms.genizah.org/" target="_blank" rel="noreferrer">FGP ↗</a>`;
+  // Always show NLI viewer link; FGP only when image loads successfully
+  let linksHtml = `<a href="${nliViewer}" target="_blank" rel="noreferrer">NLI Viewer ↗</a>`;
   document.getElementById('imglinks').innerHTML = linksHtml;
 
   // Only attempt NLI IIIF if fragment is held by NLI
@@ -590,6 +590,25 @@ function showMeta(f) {
     ['Coverage', `${Math.round(f.coverage*100)}%`],
     ['IE', f.ie]
   ];
+
+  const catalogFields = [
+    ['Subtitle', f.subtitle],
+    ['Custodial history', f.custodial],
+    ['Uniform title', f.uniform_title],
+    ['Publications', f.publications],
+  ].filter(([k,v]) => v && typeof v === 'string' && v.trim().length > 0);
+
+  const catalogRow = catalogFields.length > 0 ? `
+    <div style="width:100%;border-top:1px solid #e8e8e0;margin-top:5px;padding-top:5px;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:flex-start;">
+      <span style="font-size:9px;color:#217a47;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:.06em;align-self:center">📚 Catalog</span>
+      ${catalogFields.map(([k,v]) => `
+        <div style="display:flex;gap:4px;align-items:baseline;">
+          <span style="font-size:8px;color:#bbb;font-family:monospace;text-transform:uppercase">${k}</span>
+          <span style="font-size:10px;color:#555;font-family:'Noto Serif Hebrew',serif;direction:rtl;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${v}">${v}</span>
+        </div>
+      `).join('')}
+    </div>` : '';
+
   bar.innerHTML = badgeHTML(f.src, false) +
     items.filter(([,v])=>v).map(([k,v]) => `
       <div class="meta-pair">
@@ -597,7 +616,8 @@ function showMeta(f) {
         <span class="meta-val">${v}</span>
       </div>
     `).join('') +
-    `<span id="meta-title" title="Hebrew manuscript title">${f.title}</span>`;
+    `<span id="meta-title" title="Hebrew manuscript title">${f.title}</span>` +
+    catalogRow;
 }
 
 // ── Load full TSV ──────────────────────────────────────────────────────────
