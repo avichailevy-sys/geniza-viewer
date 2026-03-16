@@ -574,6 +574,7 @@ fetch('data.tsv')
       complete: function(result) {
         const rows = parseRows(result.data);
         if (rows.length > 0) { frags = rows; isSample = false; selected = null; }
+        buildFilters();
         render();
       }
     });
