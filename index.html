@@ -423,10 +423,10 @@ function showImage(f) {
     // Show appropriate message based on where the fragment is held
     const institution = f.shelfmark.startsWith('Ms. Evr.') || f.shelfmark.startsWith('Ms. EVR')
       ? 'Russian National Library (St. Petersburg)'
-      : f.has_fgp ? 'partner institution' : 'another institution';
+      : f.has_fgp ? 'a partner institution' : 'another institution';
     document.getElementById('img-error-msg').innerHTML =
-      `Image held by <strong>${institution}</strong>.<br>` +
-      (f.has_fgp ? 'View on FGP:' : 'Not available for direct display.');
+      `Image held by <strong>${institution}</strong> — access-restricted via IIIF.<br>` +
+      `Click below to view in the NLI viewer.`;
     err.style.display = 'block';
     return;
   }
