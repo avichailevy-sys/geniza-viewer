@@ -196,6 +196,11 @@
       <div id="filters"></div>
       <div id="reccount"></div>
       <div id="fraglist"></div>
+      <div id="pagination" style="display:none;padding:8px 10px;border-top:1px solid #e8e8e0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+        <button id="prevBtn" onclick="changePage(-1)" style="padding:3px 10px;background:#fff;border:1px solid #ccc;border-radius:3px;font-size:11px;cursor:pointer">← Prev</button>
+        <span id="pageInfo" style="font-size:10px;color:#aaa;font-family:monospace"></span>
+        <button id="nextBtn" onclick="changePage(1)" style="padding:3px 10px;background:#fff;border:1px solid #ccc;border-radius:3px;font-size:11px;cursor:pointer">Next →</button>
+      </div>
     </div>
 
     <!-- Main -->
@@ -320,6 +325,8 @@ function nliViewerUrl(f) {
 let frags = [];
 let isSample = false;
 let selected = null;
+let listPage = 0;
+const PAGE_SIZE = 500;
 let transcriptions = {};
 let txLoaded = false;
 let search = '';
@@ -363,7 +370,8 @@ function buildFilters() {
 
 // ── Render fragment list ───────────────────────────────────────────────────
 function render() {
-  search = document.getElementById('searchInput').value;
+  const newSearch = document.getElementById('searchInput').value;
+  if (newSearch !== search) { search = newSearch; listPage = 0; } else { search = newSearch; }
   buildFilters();
   const list = filtered();
   document.getElementById('reccount').textContent = `${list.length} / ${frags.length}`;
@@ -372,14 +380,26 @@ function render() {
 
   const wrap = document.getElementById('fraglist');
   wrap.innerHTML = '';
-  const MAX_DISPLAY = 500;
-  const displayList = list.slice(0, MAX_DISPLAY);
-  if (list.length > MAX_DISPLAY) {
-    const note = document.createElement('div');
-    note.style.cssText = 'padding:8px 10px;font-size:10px;color:#aaa;font-style:italic;border-bottom:1px solid #eee';
-    note.textContent = `Showing first ${MAX_DISPLAY} of ${list.length} matches. Use search or filters to narrow down.`;
-    wrap.appendChild(note);
+  // Clamp page to valid range
+  const maxPage = Math.max(0, Math.floor((list.length - 1) / PAGE_SIZE));
+  if (listPage > maxPage) listPage = maxPage;
+
+  const start = listPage * PAGE_SIZE;
+  const displayList = list.slice(start, start + PAGE_SIZE);
+
+  // Update pagination controls
+  const pagDiv = document.getElementById('pagination');
+  if (list.length > PAGE_SIZE) {
+    pagDiv.style.display = 'flex';
+    document.getElementById('prevBtn').disabled = listPage === 0;
+    document.getElementById('prevBtn').style.opacity = listPage === 0 ? '0.4' : '1';
+    document.getElementById('nextBtn').disabled = listPage >= maxPage;
+    document.getElementById('nextBtn').style.opacity = listPage >= maxPage ? '0.4' : '1';
+    document.getElementById('pageInfo').textContent = `${start+1}–${Math.min(start+PAGE_SIZE, list.length)} of ${list.length}`;
+  } else {
+    pagDiv.style.display = 'none';
   }
+
   displayList.forEach(f => {
     const isSel = selected && selected.ie === f.ie && selected.page === f.page;
     const cfg = getCfg(f.src);
@@ -644,6 +664,14 @@ function showMeta(f) {
 
 // ── Load full TSV ──────────────────────────────────────────────────────────
 
+
+// ── Pagination ───────────────────────────────────────────────────────────
+function changePage(dir) {
+  const list = filtered();
+  const maxPage = Math.floor((list.length - 1) / PAGE_SIZE);
+  listPage = Math.max(0, Math.min(maxPage, listPage + dir));
+  render();
+}
 
 // ── Catalog modal ────────────────────────────────────────────────────────
 function openCatalogModal(f) {
