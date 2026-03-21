@@ -113,7 +113,7 @@
   .htr-box input { width: 100%; background: #fff; border: 1px solid #ccc; padding: 4px 7px; border-radius: 3px; font-size: 10px; font-family: 'JetBrains Mono', monospace; outline: none; margin: 6px 0; }
   .htr-box button { padding: 4px 12px; background: #6040b0; border: none; color: #fff; border-radius: 3px; font-size: 11px; cursor: pointer; }
   .htr-box button:disabled { background: #eee; color: #aaa; cursor: default; }
-  .tx-text { font-family: 'Noto Serif Hebrew', serif; font-size: 16px; line-height: 2; color: #111; direction: rtl; text-align: right; white-space: pre-wrap; }
+  .tx-text { font-family: 'Noto Serif Hebrew', serif; font-size: 16px; line-height: 2; color: #111; direction: rtl; text-align: right; white-space: normal; }
 
   /* ── Sefaria panel ── */
   .sef-placeholder { background: #fdf5ee; border: 1px solid #f0c898; border-radius: 5px; padding: 14px; margin-bottom: 12px; font-size: 12px; color: #444; line-height: 1.7; }
@@ -528,7 +528,7 @@ function showTranscription(f) {
       <div style="background:#f8f6ff;border:1px solid #d8d0f0;border-radius:5px;padding:10px;margin-bottom:10px;font-size:11px;color:#666">
         ✍️ Transcription from passim input corpus
       </div>
-      <div style="font-family:'Noto Serif Hebrew',serif;font-size:16px;line-height:2;color:#111;direction:rtl;text-align:right;white-space:pre-wrap;padding:8px 0">${txText}</div>
+      <div style="font-family:'Noto Serif Hebrew',serif;font-size:16px;line-height:2;color:#111;direction:rtl;text-align:right;white-space:normal;padding:8px 0">${txText.replace(/\n/g, ' ')}</div>
       ${catalogHTML}
     `;
     return;
