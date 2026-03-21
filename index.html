@@ -331,6 +331,8 @@ let listPage = 0;
 const PAGE_SIZE = 500;
 let transcriptions = {};
 let txLoaded = false;
+let viewerData = {};
+let vdLoaded = false;
 let search = '';
 let corpusFilter = null;
 let htrUrl = '';
@@ -501,13 +503,13 @@ function showTranscription(f) {
   const pg = parseInt(f.page, 10);
   document.getElementById('txSub').textContent = `${f.lines} lines on page · IE ${f.ie}`;
 
-  // Check if we have a transcription for this fragment
+  // Check viewer data first, then fall back to transcriptions
   const txKey = f.ie + '_' + pg;
-  const txText = transcriptions[txKey];
+  const vdEntry = viewerData[txKey];
+  const txText = (vdEntry && vdEntry.tx) ? vdEntry.tx : transcriptions[txKey];
 
-  // If transcriptions file is still loading, show a waiting message
-  if (!txLoaded && Object.keys(transcriptions).length === 0) {
-    // Will be refreshed once loaded - set a timer to retry
+  // If data still loading, retry
+  if (!vdLoaded && !txLoaded) {
     setTimeout(() => { if (selected && selected.ie === f.ie) showTranscription(f); }, 2000);
   }
 
@@ -596,30 +598,85 @@ function fetchHTR(ie, page) {
 }
 
 // ── Sefaria panel ──────────────────────────────────────────────────────────
+function formatLoc(src, locs) {
+  // Format loc citations appropriately based on corpus
+  if (!locs || locs.length === 0) return '';
+  const corpus = getCorpus(src);
+  const locStr = locs.join(', ');
+  // For Tanakh and Mishnah, locs are proper chapter:verse — show them
+  if (corpus === 'tanakh' || corpus === 'mishnah') {
+    const label = getSrcLabel(src);
+    return `${label} ${locStr}`;
+  }
+  // For Talmud and Midrash, locs are Sefaria internal — show source only
+  return getSrcLabel(src);
+}
+
 function showSefaria(f) {
+  const pg = parseInt(f.page, 10);
+  const txKey = f.ie + '_' + pg;
+  const vdEntry = viewerData[txKey];
   const ref = buildSefariaRef(f);
   const sefariaUrl = ref
     ? `https://www.sefaria.org/${ref}`
     : `https://www.sefaria.org/search#${encodeURIComponent(f.sefaria_ref)}`;
 
-  document.getElementById('sefSub').innerHTML =
-    `${ref || f.sefaria_ref} · <span class="matched-strong">${f.count}/${f.lines} lines matched</span>`;
+  if (vdEntry && vdEntry.matches && vdEntry.matches.length > 0) {
+    // We have real passim v2 data — show matched text
+    const matches = vdEntry.matches;
+    const corpus = getCorpus(f.src);
 
-  document.getElementById('sefBody').innerHTML = `
-    <div class="sef-placeholder">
-      <strong>📖 Sefaria text — coming soon</strong><br>
-      This panel will show the Hebrew text matched by passim. The matched source is
-      <strong>${ref || f.sefaria_ref}</strong>, with
-      <span class="matched-strong">${f.count} of ${f.lines} lines</span> aligned.
-    </div>
-    <div class="sef-details">
-      <div class="id-grid-title">Alignment details</div>
-      ${[['Sefaria ref',ref||f.sefaria_ref],['Corpus',getCorpus(f.src)],['Lines matched',`${f.count} / ${f.lines}`],['Coverage',`${Math.round(f.coverage*100)}%`]].map(([k,v])=>`
-        <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
-      `).join('')}
-    </div>
-    <a class="sef-link" href="${sefariaUrl}" target="_blank" rel="noreferrer">Read full text on Sefaria →</a>
-  `;
+    document.getElementById('sefSub').innerHTML =
+      `${getSrcLabel(f.src)} · <span class="matched-strong">${matches.length} source${matches.length>1?'s':''} matched</span>`;
+
+    const matchesHTML = matches.slice(0, 5).map(m => {
+      const locLabel = formatLoc(m.src, m.locs);
+      const rate = Math.round(m.rate * 100);
+      // Only show loc numbers for Tanakh and Mishnah
+      const locDisplay = (getCorpus(m.src) === 'tanakh' || getCorpus(m.src) === 'mishnah') && m.locs.length > 0
+        ? `<span style="font-size:10px;color:#888;margin-left:6px">${m.locs.join(', ')}</span>`
+        : '';
+      return `
+        <div style="margin-bottom:14px;border-bottom:1px solid #f0f0e8;padding-bottom:12px">
+          <div style="font-size:10px;color:#888;font-family:monospace;margin-bottom:4px">
+            ${getSrcLabel(m.src)}${locDisplay}
+            <span style="float:right;color:#${rate>80?'217a47':rate>60?'b07010':'999'}">${rate}% match</span>
+          </div>
+          <div style="font-family:'Noto Serif Hebrew',serif;font-size:15px;line-height:1.9;color:#111;direction:rtl;text-align:right">${m.srcText}</div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('sefBody').innerHTML = `
+      <div style="font-size:10px;color:#888;margin-bottom:10px;font-style:italic">
+        Matched Sefaria text from passim alignment
+      </div>
+      ${matchesHTML}
+      <a class="sef-link" href="${sefariaUrl}" target="_blank" rel="noreferrer">Read full text on Sefaria →</a>
+    `;
+  } else {
+    // No viewer data yet — show placeholder
+    document.getElementById('sefSub').innerHTML =
+      `${ref || f.sefaria_ref} · <span class="matched-strong">${f.count}/${f.lines} lines matched</span>`;
+
+    document.getElementById('sefBody').innerHTML = `
+      <div class="sef-placeholder">
+        <strong>📖 Sefaria text loading…</strong><br>
+        ${vdLoaded ? 'No match data available for this fragment.' : 'Loading alignment data…'}
+      </div>
+      <div class="sef-details">
+        <div class="id-grid-title">Alignment details</div>
+        ${[['Sefaria ref',ref||f.sefaria_ref],['Corpus',getCorpus(f.src)],['Lines matched',`${f.count} / ${f.lines}`],['Coverage',`${Math.round(f.coverage*100)}%`]].map(([k,v])=>`
+          <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
+        `).join('')}
+      </div>
+      <a class="sef-link" href="${sefariaUrl}" target="_blank" rel="noreferrer">Read full text on Sefaria →</a>
+    `;
+
+    // Retry once loaded
+    if (!vdLoaded) {
+      setTimeout(() => { if (selected && selected.ie === f.ie) showSefaria(f); }, 2000);
+    }
+  }
 }
 
 // ── Metadata bar ───────────────────────────────────────────────────────────
@@ -737,7 +794,19 @@ function parseRows(data) {
 document.getElementById('recCount').textContent = 'Loading…';
 document.getElementById('sampleBadge').style.display = 'none';
 
-// Fetch transcriptions in two parts and merge
+// Fetch viewer data (passim v2 results) in two parts
+Promise.all([
+  fetch('vd1.json').then(r => r.json()),
+  fetch('vd2.json').then(r => r.json())
+]).then(([d1, d2]) => {
+  viewerData = Object.assign({}, d1, d2);
+  vdLoaded = true;
+  console.log('Viewer data loaded:', Object.keys(viewerData).length);
+  // Refresh panels if a fragment is selected
+  if (selected) { showTranscription(selected); showSefaria(selected); }
+}).catch(e => console.log('Viewer data not available:', e.message));
+
+// Also fetch transcriptions as fallback
 Promise.all([
   fetch('tx1.json').then(r => r.json()),
   fetch('tx2.json').then(r => r.json())
