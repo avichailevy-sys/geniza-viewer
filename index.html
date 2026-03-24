@@ -661,19 +661,7 @@ function showSefaria(f) {
         </div>`;
     }).join('');
 
-    const fgpEntry = fgpData[f.alma];
-    const fgpBoxHTML = fgpEntry ? expandableBox(
-      'fgp-sef-' + f.ie + '-' + pg,
-      '#6040b0', '#f8f4ff', '#c8b8f0',
-      '🏷️', 'FGP Identification',
-      `<span style="font-family:'Noto Serif Hebrew',serif;direction:rtl">${fgpEntry.h}</span> · ${fgpEntry.d}`,
-      `<div class="id-row" style="margin-top:6px"><span class="id-key" style="color:#aaa">Domain</span><span class="id-val">${fgpEntry.d}</span></div>
-       <div class="id-row"><span class="id-key" style="color:#aaa">Hebrew</span><span class="id-val" style="font-family:'Noto Serif Hebrew',serif;direction:rtl;text-align:right">${fgpEntry.h}</span></div>
-       ${fgpEntry.p ? `<div class="id-row"><span class="id-key" style="color:#aaa">Category</span><span class="id-val" style="color:#888;font-size:10px">${fgpEntry.p}</span></div>` : ''}`
-    ) : '';
-
     document.getElementById('sefBody').innerHTML = `
-      ${fgpBoxHTML}
       <div style="font-size:10px;color:#888;margin-bottom:10px;font-style:italic">
         Matched Sefaria text from passim alignment
       </div>
