@@ -791,6 +791,9 @@ function parseRows(data) {
     const ck = Object.keys(row).find(k => k.startsWith('561_a'));
     const upk = Object.keys(row).find(k => k.startsWith('730_p'));
     const lank = Object.keys(row).find(k => k.startsWith('041_a'));
+    const cityk = Object.keys(row).find(k => k.startsWith('942_x'));
+    const libk = Object.keys(row).find(k => k.startsWith('942_a'));
+    const firstVal = v => (v||'').replace(/\t/g, ' · ').split('|||')[0].trim();
     return {
       alma: row.ALMA||'', ie: row.IE||'', page: row.page||'',
       lines: +row.lines||0, src: row.src||'',
