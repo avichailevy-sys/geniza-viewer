@@ -499,70 +499,83 @@ function showImage(f) {
     .catch(() => { loading.style.display = 'none'; err.style.display = 'block'; });
 }
 
+// ── Shared expandable box builder ──────────────────────────────────────────
+function expandableBox(id, color, bg, border, icon, title, summaryHTML, detailHTML) {
+  return `
+    <div style="border:1px solid ${border};background:${bg};border-radius:5px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;cursor:pointer"
+           onclick="document.getElementById('${id}-detail').style.display=document.getElementById('${id}-detail').style.display==='none'?'block':'none';this.querySelector('.expand-arrow').textContent=document.getElementById('${id}-detail').style.display==='none'?'▶':'▼'">
+        <span style="font-size:10px;font-weight:700;color:${color};font-family:monospace;text-transform:uppercase;letter-spacing:.06em">${icon} ${title}</span>
+        <span style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;color:#666">${summaryHTML}</span>
+          <span class="expand-arrow" style="font-size:9px;color:#aaa">▶</span>
+        </span>
+      </div>
+      <div id="${id}-detail" style="display:none;padding:0 10px 8px 10px;border-top:1px solid ${border}">
+        ${detailHTML}
+      </div>
+    </div>`;
+}
+
 // ── Transcription panel ────────────────────────────────────────────────────
 function showTranscription(f) {
   const pg = parseInt(f.page, 10);
   document.getElementById('txSub').textContent = `${f.lines} lines on page · IE ${f.ie}`;
 
-  // Check viewer data first, then fall back to transcriptions
   const txKey = f.ie + '_' + pg;
   const vdEntry = viewerData[txKey];
   const txText = (vdEntry && vdEntry.tx) ? vdEntry.tx : transcriptions[txKey];
 
-  // If data still loading, retry
   if (!vdLoaded && !txLoaded) {
     setTimeout(() => { if (selected && selected.ie === f.ie) showTranscription(f); }, 2000);
   }
 
   const fgpEntry = fgpData[f.alma];
 
-  if (txText) {
+  // Build FGP box (compact with expand)
+  const fgpBoxHTML = fgpEntry ? expandableBox(
+    'fgp-' + f.ie + '-' + pg,
+    '#6040b0', '#f8f4ff', '#c8b8f0',
+    '🏷️', 'FGP Identification',
+    `<span style="font-family:'Noto Serif Hebrew',serif;direction:rtl">${fgpEntry.h}</span> · ${fgpEntry.d}`,
+    `<div class="id-row" style="margin-top:6px"><span class="id-key" style="color:#aaa">Domain</span><span class="id-val">${fgpEntry.d}</span></div>
+     <div class="id-row"><span class="id-key" style="color:#aaa">Hebrew</span><span class="id-val" style="font-family:'Noto Serif Hebrew',serif;direction:rtl;text-align:right">${fgpEntry.h}</span></div>
+     ${fgpEntry.p ? `<div class="id-row"><span class="id-key" style="color:#aaa">Category</span><span class="id-val" style="color:#888;font-size:10px">${fgpEntry.p}</span></div>` : ''}`
+  ) : '';
+
+  // Build catalog box (compact with expand)
   const catalogFields = [
-      ['Title', f.title],['Subtitle', f.subtitle],['Date', f.date],
-      ['Custodial history', f.custodial],['Uniform title', f.uniform_title],
-      ['Publications', f.publications],['Language', f.language],
-    ].filter(([k,v]) => v && typeof v === 'string' && v.trim().length > 0);
-    const catalogHTML = catalogFields.length > 0 ? `
-      <div class="id-grid" style="border:1px solid #b2dcc0;background:#f4faf4;margin-top:10px;">
-        <div class="id-grid-title" style="color:#217a47">📚 Catalog information</div>
-        ${catalogFields.map(([k,v]) => `<div class="id-row"><span class="id-key" style="color:#aaa">${k}</span><span class="id-val" style="color:#333;font-family:'Source Serif 4',serif;direction:rtl;text-align:right;font-size:11px;white-space:normal">${v}</span></div>`).join('')}
-      </div>` : '';
+    ['Title', f.title], ['Subtitle', f.subtitle], ['Date', f.date],
+    ['Custodial history', f.custodial], ['Uniform title', f.uniform_title],
+    ['Publications', f.publications], ['Language', f.language],
+  ].filter(([k,v]) => v && typeof v === 'string' && v.trim().length > 0);
+
+  const catalogBoxHTML = catalogFields.length > 0 ? expandableBox(
+    'cat-' + f.ie + '-' + pg,
+    '#217a47', '#f4faf4', '#b2dcc0',
+    '📚', 'Catalog Information',
+    `<span style="font-family:'Noto Serif Hebrew',serif;direction:rtl;font-size:11px">${f.title || f.shelfmark}</span>`,
+    catalogFields.map(([k,v]) => `<div class="id-row" style="margin-top:4px"><span class="id-key" style="color:#aaa">${k}</span><span class="id-val" style="color:#333;font-family:'Source Serif 4',serif;direction:rtl;text-align:right;font-size:11px;white-space:normal">${v}</span></div>`).join('')
+  ) : '';
+
+  if (txText) {
     document.getElementById('txBody').innerHTML = `
-      <div style="background:#f8f6ff;border:1px solid #d8d0f0;border-radius:5px;padding:10px;margin-bottom:10px;font-size:11px;color:#666">
+      ${fgpBoxHTML}
+      ${catalogBoxHTML}
+      <div style="background:#f8f6ff;border:1px solid #d8d0f0;border-radius:5px;padding:8px 10px;margin-bottom:8px;font-size:10px;color:#888">
         ✍️ Transcription from passim input corpus
       </div>
-      <div style="font-family:'Noto Serif Hebrew',serif;font-size:16px;line-height:2;color:#111;direction:rtl;text-align:right;white-space:normal;padding:8px 0">${txText.replace(/\n/g, ' ')}</div>
-      ${catalogHTML}
+      <div style="font-family:'Noto Serif Hebrew',serif;font-size:16px;line-height:2;color:#111;direction:rtl;text-align:right;white-space:normal;padding:4px 0">${txText.replace(/\n/g, ' ')}</div>
     `;
     return;
   }
 
-  const catalogFields = [
-    ['Title', f.title],
-    ['Subtitle', f.subtitle],
-    ['Date', f.date],
-    ['Custodial history', f.custodial],
-    ['Uniform title', f.uniform_title],
-    ['Publications', f.publications],
-    ['Language', f.language],
-  ].filter(([k,v]) => v && typeof v === 'string' && v.trim().length > 0);
-
-  const catalogHTML = catalogFields.length > 0 ? `
-    <div class="id-grid" style="border:1px solid #b2dcc0;background:#f4faf4;">
-      <div class="id-grid-title" style="color:#217a47">📚 Catalog information</div>
-      ${catalogFields.map(([k,v]) => `
-        <div class="id-row">
-          <span class="id-key" style="color:#aaa">${k}</span>
-          <span class="id-val" style="color:#333;font-family:'Source Serif 4',serif;direction:rtl;text-align:right;font-size:11px;white-space:normal">${v}</span>
-        </div>
-      `).join('')}
-    </div>` : '';
-
   document.getElementById('txBody').innerHTML = `
+    ${fgpBoxHTML}
+    ${catalogBoxHTML}
     <div class="not-embedded">
       <strong>📋 Transcription not embedded</strong><br>
       The passim TSV records alignment results only, not the raw transcription text.
-      Connect your HTR server below to fetch it.
     </div>
     <div class="id-grid">
       <div class="id-grid-title">Fragment identifiers</div>
@@ -570,23 +583,6 @@ function showTranscription(f) {
         <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
       `).join('')}
     </div>
-    ${fgpEntry ? `
-    <div class="id-grid" style="border:1px solid #c8b8f0;background:#f8f4ff;margin-top:8px;">
-      <div class="id-grid-title" style="color:#6040b0">🏷️ FGP Identification</div>
-      <div class="id-row">
-        <span class="id-key" style="color:#aaa">Domain</span>
-        <span class="id-val" style="color:#333">${fgpEntry.d}</span>
-      </div>
-      <div class="id-row">
-        <span class="id-key" style="color:#aaa">Hebrew</span>
-        <span class="id-val" style="color:#333;font-family:'Noto Serif Hebrew',serif;direction:rtl;text-align:right">${fgpEntry.h}</span>
-      </div>
-      ${fgpEntry.p ? `<div class="id-row">
-        <span class="id-key" style="color:#aaa">Category</span>
-        <span class="id-val" style="color:#888;font-size:10px">${fgpEntry.p}</span>
-      </div>` : ''}
-    </div>` : ''}
-    ${catalogHTML}
     <div class="htr-box">
       <div class="id-grid-title">HTR Server (optional)</div>
       <div style="font-size:10px;color:#bbb;margin:4px 0">Use <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{ie}</code> and <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{page}</code> as placeholders</div>
@@ -665,7 +661,19 @@ function showSefaria(f) {
         </div>`;
     }).join('');
 
+    const fgpEntry = fgpData[f.alma];
+    const fgpBoxHTML = fgpEntry ? expandableBox(
+      'fgp-sef-' + f.ie + '-' + pg,
+      '#6040b0', '#f8f4ff', '#c8b8f0',
+      '🏷️', 'FGP Identification',
+      `<span style="font-family:'Noto Serif Hebrew',serif;direction:rtl">${fgpEntry.h}</span> · ${fgpEntry.d}`,
+      `<div class="id-row" style="margin-top:6px"><span class="id-key" style="color:#aaa">Domain</span><span class="id-val">${fgpEntry.d}</span></div>
+       <div class="id-row"><span class="id-key" style="color:#aaa">Hebrew</span><span class="id-val" style="font-family:'Noto Serif Hebrew',serif;direction:rtl;text-align:right">${fgpEntry.h}</span></div>
+       ${fgpEntry.p ? `<div class="id-row"><span class="id-key" style="color:#aaa">Category</span><span class="id-val" style="color:#888;font-size:10px">${fgpEntry.p}</span></div>` : ''}`
+    ) : '';
+
     document.getElementById('sefBody').innerHTML = `
+      ${fgpBoxHTML}
       <div style="font-size:10px;color:#888;margin-bottom:10px;font-style:italic">
         Matched Sefaria text from passim alignment
       </div>
