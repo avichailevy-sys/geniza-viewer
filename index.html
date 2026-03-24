@@ -434,6 +434,9 @@ function selectFrag(f) {
 
 // ── Show panels ────────────────────────────────────────────────────────────
 function showPanels(f) {
+  // Scroll panels back to top
+  document.getElementById('txBody').scrollTop = 0;
+  document.getElementById('sefBody').scrollTop = 0;
   document.getElementById('panels').style.display = 'flex';
   document.getElementById('empty').style.display = 'none';
   document.getElementById('metabar').style.display = 'flex';
@@ -546,6 +549,7 @@ function showTranscription(f) {
   // Build catalog box (compact with expand)
   const catalogFields = [
     ['Title', f.title], ['Subtitle', f.subtitle], ['Date', f.date],
+    ['Library', f.library], ['City', f.city],
     ['Custodial history', f.custodial], ['Uniform title', f.uniform_title],
     ['Publications', f.publications], ['Language', f.language],
   ].filter(([k,v]) => v && typeof v === 'string' && v.trim().length > 0);
@@ -579,7 +583,7 @@ function showTranscription(f) {
     </div>
     <div class="id-grid">
       <div class="id-grid-title">Fragment identifiers</div>
-      ${[['IE',f.ie],['ALMA',f.alma],['Page',`${pg} (${f.page})`],['Lines',f.lines],['Shelfmark',f.shelfmark]].map(([k,v])=>`
+      ${[['IE',f.ie],['ALMA',f.alma],['Page',`${pg} (${f.page})`],['Lines',f.lines],['Shelfmark',f.shelfmark],['Library',f.library],['City',f.city]].filter(([k,v])=>v).map(([k,v])=>`
         <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
       `).join('')}
     </div>
@@ -798,6 +802,8 @@ function parseRows(data) {
       custodial: (ck ? row[ck] : '').trim().slice(0,200),
       uniform_title: (upk ? row[upk] : '').trim(),
       language: (lank ? row[lank] : '').trim(),
+      city: cityk ? firstVal(row[cityk]) : '',
+      library: libk ? firstVal(row[libk]) : '',
       shelfmark: sm[0]?.trim()||'',
       date: ((dk ? row[dk] : '')||'').trim().slice(0,40),
       has_nli: lib.includes('National Library of Israel'),
