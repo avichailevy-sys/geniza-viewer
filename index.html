@@ -514,8 +514,9 @@ function showTranscription(f) {
     setTimeout(() => { if (selected && selected.ie === f.ie) showTranscription(f); }, 2000);
   }
 
+  const fgpEntry = fgpData[f.alma];
+
   if (txText) {
-    const fgpEntry = fgpData[f.alma];
   const catalogFields = [
       ['Title', f.title],['Subtitle', f.subtitle],['Date', f.date],
       ['Custodial history', f.custodial],['Uniform title', f.uniform_title],
