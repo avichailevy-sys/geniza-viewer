@@ -671,19 +671,29 @@ function showSefaria(f) {
       `${getSrcLabel(f.src)} · <span class="matched-strong">${matches.length} source${matches.length>1?'s':''} matched</span>`;
 
     const matchesHTML = matches.slice(0, 5).map(m => {
-      const locLabel = formatLoc(m.src, m.locs);
       const rate = Math.round(m.rate * 100);
-      // Only show loc numbers for Tanakh and Mishnah
-      const locDisplay = (getCorpus(m.src) === 'tanakh' || getCorpus(m.src) === 'mishnah') && m.locs.length > 0
-        ? `<span style="font-size:10px;color:#888;margin-left:6px">${m.locs.join(', ')}</span>`
+      const corpus = getCorpus(m.src);
+      // Show locs for Tanakh and Mishnah only
+      const locsDisplay = (corpus === 'tanakh' || corpus === 'mishnah') && m.locs && m.locs.length > 0
+        ? `<span style="font-size:10px;color:#888;margin-left:6px">${m.locs.join(' · ')}</span>`
         : '';
+      // Reversal warning
+      const reversalWarning = m.reversed
+        ? `<span style="font-size:9px;color:#c04000;margin-left:6px">⚠️ reading order corrected</span>`
+        : '';
+      // Multiple passages indicator
+      const passagesNote = m.n > 1
+        ? `<span style="font-size:9px;color:#aaa;margin-left:6px">${m.n} passages</span>`
+        : '';
+      // Sefaria text — use m.text (new v2 format) or m.srcText (old format)
+      const sefText = m.text || m.srcText || '';
       return `
         <div style="margin-bottom:14px;border-bottom:1px solid #f0f0e8;padding-bottom:12px">
           <div style="font-size:10px;color:#888;font-family:monospace;margin-bottom:4px">
-            ${getSrcLabel(m.src)}${locDisplay}
+            ${getSrcLabel(m.src)}${locsDisplay}${reversalWarning}${passagesNote}
             <span style="float:right;color:#${rate>80?'217a47':rate>60?'b07010':'999'}">${rate}% match</span>
           </div>
-          <div style="font-family:'Noto Serif Hebrew',serif;font-size:15px;line-height:1.9;color:#111;direction:rtl;text-align:right">${m.srcText}</div>
+          <div style="font-family:'Noto Serif Hebrew',serif;font-size:15px;line-height:1.9;color:#111;direction:rtl;text-align:right">${sefText}</div>
         </div>`;
     }).join('');
 
@@ -840,15 +850,14 @@ function parseRows(data) {
 document.getElementById('recCount').textContent = 'Loading…';
 document.getElementById('sampleBadge').style.display = 'none';
 
-// Fetch viewer data (passim v2 results) in two parts
+// Fetch viewer data v2 (pairwise passim results) in two parts
 Promise.all([
-  fetch('vd1.json').then(r => r.json()),
-  fetch('vd2.json').then(r => r.json())
+  fetch('vd2_1.json').then(r => r.json()),
+  fetch('vd2_2.json').then(r => r.json())
 ]).then(([d1, d2]) => {
   viewerData = Object.assign({}, d1, d2);
   vdLoaded = true;
   console.log('Viewer data loaded:', Object.keys(viewerData).length);
-  // Refresh panels if a fragment is selected
   if (selected) { showTranscription(selected); showSefaria(selected); }
 }).catch(e => console.log('Viewer data not available:', e.message));
 
