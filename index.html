@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cairo Cairo Geniza · passim Results Viewer · MiDRASH</title>
+<title>GenizaNexus · MiDRASH</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@300;400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -175,7 +175,7 @@
       <img src="https://www.midrash.eu/wp-content/uploads/2025/10/logo-midrash-web.png" alt="MiDRASH" style="height:28px;width:auto;opacity:0.85">
     </a>
     <div class="divider"></div>
-    <span class="title">Cairo Geniza · passim Results Viewer</span>
+    <span class="title">GenizaNexus</span>
     <div class="spacer"></div>
     <span class="mono">passim experiment · Prof. David Smith</span>
   </div>
@@ -638,6 +638,39 @@ function fetchHTR(ie, page) {
     });
 }
 
+
+// ── Client-side diff display ───────────────────────────────────────────────
+function computeDiff(a, b) {
+  // Simple word-level diff between Sefaria text (a) and transcription (b)
+  const wordsA = a.split(/\s+/).filter(w => w);
+  const wordsB = b.split(/\s+/).filter(w => w);
+  const setB = new Set(wordsB);
+  
+  return wordsA.map(w => {
+    const inB = setB.has(w);
+    return inB 
+      ? `<span style="color:#217a47">${w}</span>` 
+      : `<span style="color:#c04000;text-decoration:line-through">${w}</span>`;
+  }).join(' ');
+}
+
+function toggleDiff(btn, id, sefText, txText) {
+  const textDiv = document.getElementById('sef-text-' + id);
+  const diffDiv = document.getElementById('sef-diff-' + id);
+  if (diffDiv.style.display === 'none') {
+    if (!diffDiv.innerHTML) {
+      diffDiv.innerHTML = computeDiff(sefText, txText);
+    }
+    textDiv.style.display = 'none';
+    diffDiv.style.display = 'block';
+    btn.textContent = '⟺ text';
+  } else {
+    textDiv.style.display = 'block';
+    diffDiv.style.display = 'none';
+    btn.textContent = '⟺ diff';
+  }
+}
+
 // ── Sefaria panel ──────────────────────────────────────────────────────────
 function formatLoc(src, locs) {
   // Format loc citations appropriately based on corpus
@@ -693,7 +726,12 @@ function showSefaria(f) {
             ${getSrcLabel(m.src)}${locsDisplay}${reversalWarning}${passagesNote}
             <span style="float:right;color:#${rate>80?'217a47':rate>60?'b07010':'999'}">${rate}% match</span>
           </div>
-          <div style="font-family:'Noto Serif Hebrew',serif;font-size:15px;line-height:1.9;color:#111;direction:rtl;text-align:right">${sefText}</div>
+          <div id="sef-text-${m.src.replace(/[^a-z0-9]/gi,'_')}_${rate}" style="font-family:'Noto Serif Hebrew',serif;font-size:15px;line-height:1.9;color:#111;direction:rtl;text-align:right">${sefText}</div>
+          <div id="sef-diff-${m.src.replace(/[^a-z0-9]/gi,'_')}_${rate}" style="display:none;font-family:'Noto Serif Hebrew',serif;font-size:13px;line-height:1.9;direction:rtl;text-align:right"></div>
+          <button onclick="toggleDiff(this, '${m.src.replace(/[^a-z0-9]/gi,'_')}_${rate}', ${JSON.stringify(sefText)}, ${JSON.stringify((vdEntry&&vdEntry.tx)?vdEntry.tx.replace(/\n/g,' '):'')})" 
+            style="font-size:9px;color:#aaa;background:none;border:1px solid #ddd;border-radius:3px;padding:2px 6px;cursor:pointer;margin-top:4px">
+            ⟺ diff
+          </button>
         </div>`;
     }).join('');
 
