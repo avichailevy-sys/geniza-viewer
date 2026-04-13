@@ -487,34 +487,31 @@ function showImage(f) {
 
   // Use FL from viewer data directly (avoids CORS-blocked manifest fetch)
   const txKey = f.ie + '_' + pg;
-  const vdEntry = viewerData[txKey];
-  const flId = vdEntry?.fl || f.fl || null;
 
-  if (flId) {
+  function loadImageFromFL(flId) {
     const imgUrl = `https://iiif.nli.org.il/IIIFv21/${flId}/full/max/0/default.jpg`;
     f.fl = flId;
     imgEl.src = imgUrl;
-    imgEl.onload = () => { loading.style.display = 'none'; imgEl.style.display = 'block'; };
+    imgEl.onload = () => { loading.style.display = 'none'; imgEl.style.display = 'block'; showTranscription(f); };
     imgEl.onerror = () => { loading.style.display = 'none'; err.style.display = 'block'; };
-  } else {
-    // Fallback: try manifest fetch
-    const manifestUrl = `https://iiif.nli.org.il/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
-    fetch(manifestUrl)
-      .then(r => r.json())
-      .then(manifest => {
-        const canvases = manifest?.sequences?.[0]?.canvases || [];
-        const idx = Math.max(0, pg - 1);
-        const canvas = canvases[idx] || canvases[0];
-        const flId = canvas?.['@id']?.split('/').pop();
-        if (!flId) throw new Error('No FL ID found');
-        const imgUrl = `https://iiif.nli.org.il/IIIFv21/${flId}/full/max/0/default.jpg`;
-        f.fl = flId;
-        imgEl.src = imgUrl;
-        imgEl.onload = () => { loading.style.display = 'none'; imgEl.style.display = 'block'; };
-        imgEl.onerror = () => { loading.style.display = 'none'; err.style.display = 'block'; };
-      })
-      .catch(() => { loading.style.display = 'none'; err.style.display = 'block'; });
   }
+
+  function tryLoadImage() {
+    const vdEntry = viewerData[txKey];
+    const flId = vdEntry?.fl || f.fl || null;
+    if (flId) {
+      loadImageFromFL(flId);
+    } else if (!vdLoaded) {
+      // Viewer data not loaded yet — retry in 500ms
+      setTimeout(tryLoadImage, 500);
+    } else {
+      // No FL in data — show error
+      loading.style.display = 'none';
+      err.style.display = 'block';
+    }
+  }
+
+  tryLoadImage();
 }
 
 // ── Shared expandable box builder ──────────────────────────────────────────
