@@ -498,28 +498,19 @@ function showImage(f) {
   }
 
   function tryLoadImage() {
-    const vdEntry = viewerData[txKey];
-    const flId = vdEntry?.fl || f.fl || null;
-    if (flId) {
-      loadImageFromFL(flId);
-    } else if (!vdLoaded) {
-      // Viewer data not loaded yet — retry in 500ms
-      setTimeout(tryLoadImage, 500);
-    } else {
-      // No FL in viewer data — fall back to manifest fetch
-      const manifestUrl = `https://iiif.nli.org.il/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
-      fetch(manifestUrl)
-        .then(r => r.json())
-        .then(manifest => {
-          const canvases = manifest?.sequences?.[0]?.canvases || [];
-          const idx = Math.max(0, pg - 1);
-          const canvas = canvases[idx] || canvases[0];
-          const flId = canvas?.['@id']?.split('/').pop();
-          if (!flId) throw new Error('No FL ID found');
-          loadImageFromFL(flId);
-        })
-        .catch(() => { loading.style.display = 'none'; err.style.display = 'block'; });
-    }
+    // Always fetch manifest via proxy to get correct IIIF FL number
+    const manifestUrl = `https://nli-proxy.avichai-levy.workers.dev/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
+    fetch(manifestUrl)
+      .then(r => r.json())
+      .then(manifest => {
+        const canvases = manifest?.sequences?.[0]?.canvases || [];
+        const idx = Math.max(0, pg - 1);
+        const canvas = canvases[idx] || canvases[0];
+        const flId = canvas?.['@id']?.split('/').pop();
+        if (!flId) throw new Error('No FL ID found');
+        loadImageFromFL(flId);
+      })
+      .catch(() => { loading.style.display = 'none'; err.style.display = 'block'; });
   }
 
   tryLoadImage();
