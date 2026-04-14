@@ -490,7 +490,8 @@ function showImage(f) {
   const txKey = f.ie + '_' + pg;
 
   function loadImageFromFL(flId) {
-    const imgUrl = `https://nli-proxy.avichai-levy.workers.dev/IIIFv21/${flId}/full/max/0/default.jpg`;
+    // Load image directly from NLI (no proxy needed for img tags)
+    const imgUrl = `https://iiif.nli.org.il/IIIFv21/${flId}/full/max/0/default.jpg`;
     f.fl = flId;
     imgEl.src = imgUrl;
     imgEl.onload = () => { loading.style.display = 'none'; imgEl.style.display = 'block'; showTranscription(f); };
@@ -498,7 +499,7 @@ function showImage(f) {
   }
 
   function tryLoadImage() {
-    // Always fetch manifest via proxy to get correct IIIF FL number
+    // Fetch manifest via Cloudflare proxy (needed for CORS), then load image directly
     const manifestUrl = `https://nli-proxy.avichai-levy.workers.dev/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
     fetch(manifestUrl)
       .then(r => r.json())
