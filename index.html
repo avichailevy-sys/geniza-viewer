@@ -673,7 +673,17 @@ function toggleDiff(btn, id) {
   const texts = diffTexts[id] || {};
   if (diffDiv.style.display === 'none') {
     if (!diffDiv.innerHTML && texts.sef) {
-      diffDiv.innerHTML = computeDiff(texts.sef, texts.tx || '');
+      // Get transcription at click time (all data loaded by now)
+      let txText = texts.tx || '';
+      if (!txText && selected) {
+        const pg = parseInt(selected.page, 10);
+        const txKey = selected.ie + '_' + pg;
+        const vd = viewerData[txKey];
+        const tx = (vd && vd.tx) ? vd.tx : transcriptions[txKey];
+        txText = tx ? tx.replace(/
+/g, ' ') : '';
+      }
+      diffDiv.innerHTML = computeDiff(texts.sef, txText);
     }
     textDiv.style.display = 'none';
     diffDiv.style.display = 'block';
@@ -722,7 +732,8 @@ function showSefaria(f) {
       const rate = Math.round(m.rate * 100);
       const id = m.src.replace(/[^a-z0-9]/gi,'_') + '_' + rate;
       const sefText = m.text || m.srcText || '';
-      const txText = (vdEntry && vdEntry.tx) ? vdEntry.tx.replace(/\n/g,' ') : '';
+      const txRaw = (vdEntry && vdEntry.tx) ? vdEntry.tx : transcriptions[txKey] || '';
+      const txText = txRaw.replace(/\n/g,' ');
       diffTexts[id] = { sef: sefText, tx: txText };
     });
 
