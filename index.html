@@ -334,7 +334,6 @@ let txLoaded = false;
 let viewerData = {};
 let vdLoaded = false;
 let diffTexts = {}; // stores sefaria+transcription text for diff
-let flCache = {};   // caches manifest FL per txKey to avoid refetching
 let fgpData = {};
 let search = '';
 let corpusFilter = null;
@@ -485,7 +484,7 @@ function showImage(f) {
     return;
   }
 
-  loading.innerHTML = 'Loading manuscript image…<br><span style="font-size:10px;color:#bbb">NLI images may take up to 30 seconds to load</span>';
+  loading.textContent = 'Loading manuscript image…';
 
   // Use FL from viewer data directly (avoids CORS-blocked manifest fetch)
   const txKey = f.ie + '_' + pg;
@@ -500,11 +499,6 @@ function showImage(f) {
   }
 
   function tryLoadImage() {
-    // Check cache first — skip manifest fetch if FL already known
-    if (flCache[txKey]) {
-      loadImageFromFL(flCache[txKey]);
-      return;
-    }
     // Fetch manifest via Cloudflare proxy (needed for CORS), then load image directly
     const manifestUrl = `https://nli-proxy.avichai-levy.workers.dev/IIIFv21/DOCID/PNX_MANUSCRIPTS${f.alma}-1/manifest`;
     fetch(manifestUrl)
@@ -515,7 +509,6 @@ function showImage(f) {
         const canvas = canvases[idx] || canvases[0];
         const flId = canvas?.['@id']?.split('/').pop();
         if (!flId) throw new Error('No FL ID found');
-        flCache[txKey] = flId; // save to cache
         loadImageFromFL(flId);
       })
       .catch(() => { loading.style.display = 'none'; err.style.display = 'block'; });
