@@ -680,8 +680,7 @@ function toggleDiff(btn, id) {
         const txKey = selected.ie + '_' + pg;
         const vd = viewerData[txKey];
         const tx = (vd && vd.tx) ? vd.tx : transcriptions[txKey];
-        txText = tx ? tx.replace(/
-/g, ' ') : '';
+        txText = tx ? tx.replace(/\n/g, ' ') : '';
       }
       diffDiv.innerHTML = computeDiff(texts.sef, txText);
     }
