@@ -179,11 +179,12 @@
   .cmp-table { width:100%; border-collapse:collapse; font-size:11px; margin-top:6px; }
   .cmp-table th { padding:3px 8px; font-size:8px; font-family:monospace; text-align:left; text-transform:uppercase; border-bottom:2px solid #c0cce0; }
   .cmp-table td { padding:5px 8px; vertical-align:top; border-top:1px solid #e8eef8; }
-  .cmp-en { font-size:10px; color:#333; }
-  .cmp-he { font-size:11px; font-family:'Noto Serif Hebrew',serif; direction:rtl; color:#555; margin-top:1px; }
   .cmp-muted { color:#bbb; font-size:10px; text-align:center; }
   .cmp-indicator { font-size:14px; text-align:center; width:22px; }
   .cmp-table-cell { padding:5px 8px; vertical-align:top; border-top:1px solid #e8eef8; }
+  .cmp-cell-inner { display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+  .cmp-en { font-size:10px; color:#333; display:block; }
+  .cmp-he { font-size:11px; font-family:'Noto Serif Hebrew',serif; color:#555; display:block; text-align:right; width:100%; }
 </style>
 </head>
 <body>
@@ -501,8 +502,10 @@ function buildComparisonBox(f, fgpEntry, vdEntry) {
   function cell(en, he) {
     if (!en && !he) return `<td class="cmp-indicator cmp-muted">—</td>`;
     return `<td class="cmp-table-cell">
-      ${en ? `<div class="cmp-en">${en}</div>` : ''}
-      ${he ? `<div class="cmp-he">${he}</div>` : ''}
+      <div class="cmp-cell-inner">
+        ${en ? `<span class="cmp-en">${en}</span>` : ''}
+        ${he ? `<span class="cmp-he">${he}</span>` : ''}
+      </div>
     </td>`;
   }
 
