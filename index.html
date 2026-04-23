@@ -176,7 +176,14 @@
   .id-chip-val a:hover { text-decoration:underline; }
 
   /* ── Comparison table ── */
-  .cmp-table { width:100%; border-collapse:collapse; font-size:11px; margin-top:6px; }
+  .cmp-table { width:100%; border-collapse:collapse; font-size:11px; margin-top:6px; table-layout:fixed; }
+  .cmp-table th { padding:3px 8px; font-size:8px; font-family:monospace; text-align:left; text-transform:uppercase; border-bottom:2px solid #c0cce0; overflow:hidden; }
+  .cmp-table td { padding:5px 8px; vertical-align:top; border-top:1px solid #e8eef8; overflow:hidden; }
+  .cmp-col-level { width:14%; }
+  .cmp-col-ind { width:5%; }
+  .cmp-col-passim { width:27%; }
+  .cmp-col-fgp { width:27%; }
+  .cmp-col-ktiv { width:27%; }
   .cmp-table th { padding:3px 8px; font-size:8px; font-family:monospace; text-align:left; text-transform:uppercase; border-bottom:2px solid #c0cce0; }
   .cmp-table td { padding:5px 8px; vertical-align:top; border-top:1px solid #e8eef8; }
   .cmp-muted { color:#bbb; font-size:10px; text-align:center; }
@@ -531,11 +538,11 @@ function buildComparisonBox(f, fgpEntry, vdEntry) {
       <table class="cmp-table">
         <thead>
           <tr>
-            <th style="color:#aaa">Level</th>
-            <th></th>
-            <th style="color:#b05010">passim</th>
-            <th style="color:#6040b0">FGP</th>
-            <th style="color:#217a47">KTIV</th>
+            <th class="cmp-col-level" style="color:#aaa">Level</th>
+            <th class="cmp-col-ind"></th>
+            <th class="cmp-col-passim" style="color:#b05010">passim</th>
+            <th class="cmp-col-fgp" style="color:#6040b0">FGP</th>
+            <th class="cmp-col-ktiv" style="color:#217a47">KTIV</th>
           </tr>
         </thead>
         <tbody>
