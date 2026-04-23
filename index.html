@@ -164,6 +164,26 @@
   #catalog-modal .field-row { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
   #catalog-modal .field-key { font-size: 10px; color: #bbb; font-family: monospace; text-transform: uppercase; min-width: 120px; padding-top: 2px; }
   #catalog-modal .field-val { font-size: 13px; color: #333; font-family: 'Noto Serif Hebrew', serif; direction: rtl; text-align: right; flex: 1; line-height: 1.6; }
+
+  /* ── Identifier strip ── */
+  .id-strip { display:flex; flex-wrap:wrap; gap:6px 14px; background:#f4f4f8; border:1px solid #dddde8; border-radius:5px; padding:7px 11px; margin-bottom:8px; align-items:center; }
+  .id-strip-label { font-size:8px; color:#bbb; font-family:monospace; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-right:2px; }
+  .id-chip { display:inline-flex; align-items:baseline; gap:4px; }
+  .id-chip-key { font-size:8px; color:#999; font-family:monospace; text-transform:uppercase; border-bottom:1px dotted #ccc; cursor:help; position:relative; }
+  .id-chip-key:hover::after { content:attr(data-tip); position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#333; color:#fff; font-size:10px; font-family:'Source Serif 4',serif; padding:4px 8px; border-radius:3px; white-space:nowrap; z-index:200; pointer-events:none; margin-bottom:5px; }
+  .id-chip-val { font-family:monospace; font-size:10px; color:#333; font-weight:600; user-select:all; }
+  .id-chip-val a { color:#1060a0; text-decoration:none; }
+  .id-chip-val a:hover { text-decoration:underline; }
+
+  /* ── Comparison table ── */
+  .cmp-table { width:100%; border-collapse:collapse; font-size:11px; margin-top:6px; }
+  .cmp-table th { padding:3px 8px; font-size:8px; font-family:monospace; text-align:left; text-transform:uppercase; border-bottom:2px solid #c0cce0; }
+  .cmp-table td { padding:5px 8px; vertical-align:top; border-top:1px solid #e8eef8; }
+  .cmp-en { font-size:10px; color:#333; }
+  .cmp-he { font-size:11px; font-family:'Noto Serif Hebrew',serif; direction:rtl; color:#555; margin-top:1px; }
+  .cmp-muted { color:#bbb; font-size:10px; text-align:center; }
+  .cmp-indicator { font-size:14px; text-align:center; width:22px; }
+  .cmp-table-cell { padding:5px 8px; vertical-align:top; border-top:1px solid #e8eef8; }
 </style>
 </head>
 <body>
@@ -273,6 +293,271 @@ const CC = {
   bible:    { label:'Bible',         color:'#217a47', bg:'#eaf5ee', border:'#b2dcc0' },
   default:  { label:'Other',         color:'#555',    bg:'#f4f4f4', border:'#ccc'    }
 };
+
+// ── Hebrew labels for Sefaria source string components ───────────────────────
+const SEF_HE = {
+  // Corpus
+  tanakh:'תנ"ך', mishnah:'משנה', talmud:'תלמוד', liturgy:'תפילה וליטורגיה',
+  mishneh:'משנה תורה', zohar:'זוהר', midrash:'מדרש',
+  // Mishnah / Talmud tractates
+  'Berakhot':'ברכות','Peah':'פאה','Demai':'דמאי','Kilayim':'כלאיים',
+  'Sheviit':'שביעית','Terumot':'תרומות','Maasrot':'מעשרות',
+  'Maaser Sheni':'מעשר שני','Challah':'חלה','Orlah':'ערלה','Bikkurim':'ביכורים',
+  'Shabbat':'שבת','Eruvin':'עירובין','Pesachim':'פסחים','Shekalim':'שקלים',
+  'Yoma':'יומא','Sukkah':'סוכה','Beitzah':'ביצה','Rosh Hashanah':'ראש השנה',
+  'Taanit':'תענית','Megillah':'מגילה','Moed Katan':'מועד קטן','Chagigah':'חגיגה',
+  'Yevamot':'יבמות','Ketubot':'כתובות','Nedarim':'נדרים','Nazir':'נזיר',
+  'Sotah':'סוטה','Gittin':'גיטין','Kiddushin':'קידושין',
+  'Bava Kamma':'בבא קמא','Bava Metzia':'בבא מציעא','Bava Batra':'בבא בתרא',
+  'Sanhedrin':'סנהדרין','Makkot':'מכות','Shevuot':'שבועות','Eduyot':'עדויות',
+  'Avodah Zarah':'עבודה זרה','Avot':'אבות','Horayot':'הוריות',
+  'Zevachim':'זבחים','Menachot':'מנחות','Chullin':'חולין','Bekhorot':'בכורות',
+  'Arakhin':'ערכין','Temurah':'תמורה','Keritot':'כריתות','Meilah':'מעילה',
+  'Tamid':'תמיד','Middot':'מידות','Kinnim':'קינים',
+  'Kelim':'כלים','Ohalot':'אוהלות','Negaim':'נגעים','Parah':'פרה',
+  'Tahorot':'טהרות','Mikvaot':'מקוואות','Niddah':'נידה','Makhshirin':'מכשירין',
+  'Zavim':'זבים','Tevul Yom':'טבול יום','Yadayim':'ידיים','Oktzin':'עוקצין',
+  // Tanakh books
+  'Genesis':'בראשית','Exodus':'שמות','Leviticus':'ויקרא','Numbers':'במדבר','Deuteronomy':'דברים',
+  'Joshua':'יהושע','Judges':'שופטים','I Samuel':'שמואל א','II Samuel':'שמואל ב',
+  'I Kings':'מלכים א','II Kings':'מלכים ב','Isaiah':'ישעיהו','Jeremiah':'ירמיהו',
+  'Ezekiel':'יחזקאל','Hosea':'הושע','Joel':'יואל','Amos':'עמוס','Obadiah':'עובדיה',
+  'Jonah':'יונה','Micah':'מיכה','Nachum':'נחום','Habakkuk':'חבקוק',
+  'Zephaniah':'צפניה','Haggai':'חגי','Zechariah':'זכריה','Malachi':'מלאכי',
+  'Psalms':'תהילים','Proverbs':'משלי','Job':'איוב','Song of Songs':'שיר השירים',
+  'Ruth':'רות','Lamentations':'איכה','Ecclesiastes':'קהלת','Esther':'אסתר',
+  'Daniel':'דניאל','Ezra':'עזרא','Nehemiah':'נחמיה',
+  'I Chronicles':'דברי הימים א','II Chronicles':'דברי הימים ב',
+};
+
+// ── Parse passim source string → {corpusEn, corpusHe, tractateEn, tractateHe} ─
+function parseSefariaSrc(src) {
+  const parts = src.split('_');
+  const c = getCorpus(src);
+  let corpusEn = CC[c]?.label || c;
+  let corpusHe = SEF_HE[c] || c;
+  if (c === 'talmud') {
+    if (src.includes('yerushalmi')) { corpusEn = 'Jerusalem Talmud'; corpusHe = 'תלמוד ירושלמי'; }
+    else { corpusEn = 'Talmud Bavli'; corpusHe = 'תלמוד בבלי'; }
+  }
+  let tractateEn = '', tractateHe = '';
+  if (c === 'mishnah') {
+    const last = (parts[parts.length - 1] || '').replace(/^Mishnah\s+/i, '').trim();
+    tractateEn = last; tractateHe = SEF_HE[last] || last;
+  } else if (c === 'talmud') {
+    tractateEn = parts.slice(1).filter(x => x!=='bavli'&&x!=='yerushalmi'&&!x.startsWith('Seder')).join(' ').trim();
+    tractateHe = SEF_HE[tractateEn] || tractateEn;
+  } else if (c === 'tanakh') {
+    tractateEn = parts[parts.length - 1] || '';
+    tractateHe = SEF_HE[tractateEn] || tractateEn;
+  }
+  return { corpus: c, corpusEn, corpusHe, tractateEn, tractateHe };
+}
+
+// ── Parse KTIV Hebrew title → {corpus, corpusEn, corpusHe, tractateEn, tractateHe} ─
+function parseKtivTitle(title) {
+  if (!title) return null;
+  const t = title.trim();
+  if (!t || t.includes('תחום לא מזוהה') || t.startsWith('קטע גניזה') || t === 'תחום')
+    return { corpus: null, corpusEn: null, corpusHe: t.slice(0,30)||null, tractateEn:'', tractateHe:'' };
+
+  function extractTractate(parenContent) {
+    // Extract leading Hebrew word(s) before numbers, dots, or page refs
+    const inner = (parenContent||'').replace(/[."]/g,'').trim();
+    const m = inner.match(/^([\u05D0-\u05EA\u05F3\u05F4 "]+?)(?:\s+[\u05D0-\u05D9]{1,2}[\u05E2\u05D1]|\s+\d|$)/);
+    const he = m ? m[1].trim() : inner.split(/\s+\d/)[0].trim().split(/\s+[\u05D0-\u05D9]{1,2}[\u05E2\u05D1]/)[0].trim();
+    const en = Object.entries(SEF_HE).find(([e,h]) => h===he)?.[0] || '';
+    return { he, en };
+  }
+
+  const paren = (t.match(/\(([^)]+)\)/)||[])[1] || '';
+
+  if (t.includes('תלמוד בבלי')) {
+    const tr = extractTractate(paren);
+    return { corpus:'talmud', corpusEn:'Talmud Bavli', corpusHe:'תלמוד בבלי', tractateEn:tr.en, tractateHe:tr.he };
+  }
+  if (t.includes('תלמוד ירושלמי')) {
+    const tr = extractTractate(paren);
+    return { corpus:'talmud', corpusEn:'Jerusalem Talmud', corpusHe:'תלמוד ירושלמי', tractateEn:tr.en, tractateHe:tr.he };
+  }
+  if (t.includes('משנה תורה') || t.startsWith('רמב"ם') || t.startsWith('הרמב"ם'))
+    return { corpus:'mishneh', corpusEn:'Mishneh Torah', corpusHe:'משנה תורה', tractateEn:'', tractateHe:'' };
+  if (t.includes('משנה')) {
+    const tr = (paren && !paren.includes('קטעים')) ? extractTractate(paren) : {he:'',en:''};
+    return { corpus:'mishnah', corpusEn:'Mishnah', corpusHe:'משנה', tractateEn:tr.en, tractateHe:tr.he };
+  }
+  if (t.includes('מקרא') || (t.includes('[טקסט]') && !t.includes('תלמוד')))
+    return { corpus:'tanakh', corpusEn:'Tanakh', corpusHe:'תנ"ך', tractateEn:'', tractateHe:'' };
+  if (t.includes('פיוט') || t.includes('תפילה') || t.includes('ליטורגי'))
+    return { corpus:'liturgy', corpusEn:'Liturgy', corpusHe:'תפילה / פיוט', tractateEn:'', tractateHe:'' };
+  if (t.includes('זוהר'))
+    return { corpus:'zohar', corpusEn:'Zohar', corpusHe:'זוהר', tractateEn:'', tractateHe:'' };
+  if (t.includes('מדרש') || t.includes('ספרות חז"ל') || t.includes('הלכות'))
+    return { corpus:'midrash', corpusEn:'Rabbinic', corpusHe:'מדרש / ספרות חז"ל', tractateEn:'', tractateHe:'' };
+  // Unknown pattern — return raw title as Hebrew label
+  return { corpus: null, corpusEn: null, corpusHe: t.slice(0,50), tractateEn:'', tractateHe:'' };
+}
+
+// ── FGP English domain → normalized corpus key ───────────────────────────────
+function fgpToCorpus(domain) {
+  if (!domain) return null;
+  const d = domain.toLowerCase();
+  if (d.includes('mishneh torah') || d.includes('maimonides')) return 'mishneh';
+  if (d.includes('mishnah')) return 'mishnah';
+  if (d.includes('yerushalmi') || d.includes('jerusalem talmud') || d.includes('palestinian talmud')) return 'talmud_yerushalmi';
+  if (d.includes('talmud bavli') || d.includes('babylonian')) return 'talmud_bavli';
+  if (d.includes('talmud')) return 'talmud';
+  if (d.includes('bible') || d.includes('tanakh') || d.includes('scripture') || d.includes('torah text')) return 'tanakh';
+  if (d.includes('liturgy') || d.includes('piyyut') || d.includes('prayer')) return 'liturgy';
+  if (d.includes('zohar') || d.includes('kabbalah')) return 'zohar';
+  if (d.includes('midrash') || d.includes('rabbinic') || d.includes('aggadah') || d.includes('halakhah')) return 'midrash';
+  return null;
+}
+
+// ── Build identifier strip with tooltips ─────────────────────────────────────
+function buildIdentifierStrip(f, pg) {
+  const tips = {
+    IE: 'Item Enumerator — NLI unique identifier for this manuscript item',
+    ALMA: 'System control number — links to the full NLI catalog record',
+    FL: 'Fragment Leaf — NLI IIIF identifier for this specific page',
+    Page: 'Page number within this manuscript as indexed by passim',
+  };
+  const nliUrl = `https://www.nli.org.il/en/manuscripts/NNL_ALEPH${f.alma}/NLI`;
+  const chips = [
+    ['IE',   `<a href="${nliUrl}" target="_blank" rel="noreferrer">${f.ie}</a>`],
+    ['ALMA', f.alma],
+    ['Page', `p.${pg}`],
+    ...(f.fl ? [['FL', f.fl]] : []),
+  ];
+  return `<div class="id-strip">
+    <span class="id-strip-label">Fragment IDs</span>
+    ${chips.map(([k,v]) => `
+      <div class="id-chip">
+        <span class="id-chip-key" data-tip="${tips[k]||k}">${k}</span>
+        <span class="id-chip-val">${v}</span>
+      </div>`).join('')}
+  </div>`;
+}
+
+// ── Build comparison box (passim · FGP · KTIV) ───────────────────────────────
+function buildComparisonBox(f, fgpEntry, vdEntry) {
+  const pg = parseInt(f.page, 10);
+
+  // passim: aggregate all matches for this fragment
+  const matches = (vdEntry && vdEntry.matches && vdEntry.matches.length > 0)
+    ? vdEntry.matches : [{ src: f.src }];
+  const passimParsed = matches.map(m => parseSefariaSrc(m.src || f.src));
+  const primaryP = passimParsed[0];
+  // Normalize passim corpus (distinguish bavli/yerushalmi)
+  function pCorpusNorm(p) {
+    if (p.corpus !== 'talmud') return p.corpus;
+    return p.corpusHe.includes('ירושלמי') ? 'talmud_yerushalmi' : 'talmud_bavli';
+  }
+  const passimCorpusNorms = [...new Set(passimParsed.map(pCorpusNorm))];
+  const passimMultiple = passimCorpusNorms.length > 1;
+  const passimCorpusEn = passimMultiple
+    ? [...new Set(passimParsed.map(p=>p.corpusEn))].join(' / ')
+    : primaryP.corpusEn;
+  const passimCorpusHe = passimMultiple
+    ? [...new Set(passimParsed.map(p=>p.corpusHe))].join(' / ')
+    : primaryP.corpusHe;
+
+  // FGP
+  const fgpCorpusNorm = fgpEntry ? fgpToCorpus(fgpEntry.d) : null;
+  const fgpCorpusEn = fgpEntry ? fgpEntry.d.split(':')[0].trim() : null;
+  const fgpCorpusHe = fgpEntry ? fgpEntry.h : null;
+
+  // KTIV
+  const ktiv = parseKtivTitle(f.title);
+  const ktivCorpusNorm = ktiv ? (ktiv.corpus === 'talmud'
+    ? (ktiv.corpusEn.includes('Jerusalem') ? 'talmud_yerushalmi' : 'talmud_bavli')
+    : ktiv.corpus) : null;
+
+  // Agreement logic: 🟢 all agree, 🟡 at least one silent, 🔴 contradiction
+  function agree(vals) {
+    const known = vals.filter(v => v !== null && v !== undefined && v !== '');
+    if (known.length === 0) return '⚪';
+    const unique = [...new Set(known)];
+    if (unique.length === 1 && known.length >= 2) return '🟢';
+    if (unique.length === 1) return '🟡'; // only one source has data
+    return '🔴'; // genuine contradiction
+  }
+
+  const corpusAgree = agree([passimCorpusNorms[0]||null, fgpCorpusNorm, ktivCorpusNorm]);
+  // Tractate: compare passim vs KTIV (FGP rarely goes this deep)
+  const pTractEn = primaryP.tractateEn || '';
+  const kTractEn = ktiv?.tractateEn || '';
+  const tractateAgree = (pTractEn && kTractEn)
+    ? (pTractEn.toLowerCase() === kTractEn.toLowerCase() ? '🟢' : '🔴')
+    : (pTractEn || kTractEn) ? '🟡' : '⚪';
+
+  // Summary line for collapsed state
+  const parts = [];
+  if (corpusAgree !== '⚪') parts.push(`${corpusAgree} Corpus`);
+  if (tractateAgree !== '⚪') parts.push(`${tractateAgree} Tractate`);
+  const summaryStr = parts.length ? parts.join(' · ') : 'No identification data available';
+
+  // Helper: render one cell
+  function cell(en, he) {
+    if (!en && !he) return `<td class="cmp-indicator cmp-muted">—</td>`;
+    return `<td class="cmp-table-cell">
+      ${en ? `<div class="cmp-en">${en}</div>` : ''}
+      ${he ? `<div class="cmp-he">${he}</div>` : ''}
+    </td>`;
+  }
+
+  // Helper: render one row
+  function row(level, indicator, pEn, pHe, fEn, fHe, kEn, kHe) {
+    return `<tr>
+      <td style="padding:4px 8px;font-size:9px;color:#888;font-family:monospace;text-transform:uppercase;white-space:nowrap;vertical-align:top">${level}</td>
+      <td class="cmp-indicator">${indicator}</td>
+      ${cell(pEn, pHe)}
+      ${cell(fEn, fHe)}
+      ${cell(kEn, kHe)}
+    </tr>`;
+  }
+
+  // Notes at bottom of expanded view
+  const notes = [];
+  if (passimMultiple) notes.push(`⚠️ passim found ${passimParsed.length} different corpus types for this fragment — see Sefaria panel for full list`);
+  if (!fgpEntry) notes.push(`FGP: no identification data for ALMA ${f.alma}`);
+  if (!ktiv || !ktiv.corpus) notes.push(`KTIV title: "${f.title || 'not available'}"`);
+
+  const detailHTML = `
+    <div style="overflow-x:auto">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th style="color:#aaa">Level</th>
+            <th></th>
+            <th style="color:#b05010">passim</th>
+            <th style="color:#6040b0">FGP</th>
+            <th style="color:#217a47">KTIV</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${row('Corpus', corpusAgree, passimCorpusEn, passimCorpusHe, fgpCorpusEn, fgpCorpusHe, ktiv?.corpusEn, ktiv?.corpusHe)}
+          ${(pTractEn || kTractEn || primaryP.tractateHe || ktiv?.tractateHe) ?
+            row('Tractate / Book', tractateAgree,
+              primaryP.tractateEn, primaryP.tractateHe,
+              null, null,
+              ktiv?.tractateEn, ktiv?.tractateHe) : ''}
+          ${(matches.length > 0 && (getCorpus(f.src)==='mishnah'||getCorpus(f.src)==='tanakh') && matches[0].locs && matches[0].locs.length > 0) ?
+            row('Location', '—', matches[0].locs.join(' · '), '', null, null, null, null) : ''}
+        </tbody>
+      </table>
+    </div>
+    ${notes.length ? `<div style="margin-top:6px;font-size:9px;color:#999;line-height:1.7">${notes.map(n=>`<div>${n}</div>`).join('')}</div>` : ''}
+  `;
+
+  return expandableBox(
+    'cmp-' + f.ie + '-' + pg,
+    '#2060a0', '#f0f4fc', '#b0c8e8',
+    '🔍', 'Identification Comparison',
+    summaryStr,
+    detailHTML
+  );
+}
 
 function getCorpus(src) {
   const c = src.split('_')[0];
@@ -594,13 +879,15 @@ function showTranscription(f) {
     catalogFields.map(([k,v]) => `<div class="id-row" style="margin-top:4px"><span class="id-key" style="color:#aaa">${k}</span><span class="id-val" style="color:#333;font-family:'Source Serif 4',serif;direction:rtl;text-align:right;font-size:11px;white-space:normal">${v}</span></div>`).join('')
   ) : '';
 
+  const comparisonBoxHTML = buildComparisonBox(f, fgpEntry, vdEntry);
+  const idStripHTML = buildIdentifierStrip(f, pg);
+
   if (txText) {
     document.getElementById('txBody').innerHTML = `
+      ${idStripHTML}
+      ${comparisonBoxHTML}
       ${fgpBoxHTML}
       ${catalogBoxHTML}
-      <div style="font-size:10px;color:#aaa;font-family:monospace;margin-bottom:6px;padding:4px 0;border-bottom:1px solid #f0f0e8">
-        IE&nbsp;<strong>${f.ie}</strong> &nbsp;·&nbsp; ALMA&nbsp;<strong>${f.alma}</strong> &nbsp;·&nbsp; p.${pg}${f.fl ? ` &nbsp;·&nbsp; FL&nbsp;<strong>${f.fl}</strong>` : ''}
-      </div>
       <div style="background:#f8f6ff;border:1px solid #d8d0f0;border-radius:5px;padding:8px 10px;margin-bottom:8px;font-size:10px;color:#888">
         ✍️ Transcription from passim input corpus
       </div>
@@ -610,17 +897,13 @@ function showTranscription(f) {
   }
 
   document.getElementById('txBody').innerHTML = `
+    ${idStripHTML}
+    ${comparisonBoxHTML}
     ${fgpBoxHTML}
     ${catalogBoxHTML}
     <div class="not-embedded">
       <strong>📋 Transcription not embedded</strong><br>
       The passim TSV records alignment results only, not the raw transcription text.
-    </div>
-    <div class="id-grid">
-      <div class="id-grid-title">Fragment identifiers</div>
-      ${[['IE',f.ie],['ALMA',f.alma],['Page',`${pg} (${f.page})`],['Lines',f.lines],['Shelfmark',f.shelfmark],['Library',f.library],['City',f.city]].filter(([k,v])=>v).map(([k,v])=>`
-        <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
-      `).join('')}
     </div>
     <div class="htr-box">
       <div class="id-grid-title">HTR Server (optional)</div>
