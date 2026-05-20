@@ -1480,74 +1480,84 @@ function closeCompareModal(eOrForce) {
   }
 }
 
-// ── Example fragment cache (for Biblissima presentation) ─────────────────
-// Finds three exemplary fragments — one fully-agreeing, one enrichment,
-// one contradiction — so they can be jumped to during a live talk.
-let compareExamples = { agreement: null, enrichment: null, contradiction: null };
+// ── Example fragment pools (for Biblissima presentation) ─────────────────
+// Builds three pools — all fragments matching each agreement category —
+// then random-samples from a pool on each button click. Excludes the
+// currently-shown fragment so successive clicks always show variety.
+let comparePools = { agreement: null, enrichment: null, contradiction: null };
 
 function findCompareExamples() {
-  compareExamples = { agreement: null, enrichment: null, contradiction: null };
-  // Only meaningful once both fgpData and KTIV titles are present.
+  // Build full pools, not just one example per category.
+  const pools = { agreement: [], enrichment: [], contradiction: [] };
   for (const f of frags) {
-    if (compareExamples.agreement && compareExamples.enrichment && compareExamples.contradiction) break;
     const passim = normalizePassim(f);
     const fgpEntry = fgpData[f.alma] || fgpData['0' + f.alma] || fgpData[f.alma.replace(/^0+/,'')];
     const fgp = normalizeFgp(fgpEntry);
     const ktiv = normalizeKtiv(f.title);
 
-    // Quality bar: need passim + at least one other present
+    // Need passim + at least one other source present for any meaningful comparison
     const sourcesPresent = [passim.corpus, fgp.corpus, ktiv.corpus].filter(v => v).length;
     if (sourcesPresent < 2) continue;
 
-    // Per-row agreements
     const ags = [
       agreementFor([passim.corpus, fgp.corpus, ktiv.corpus]),
       agreementFor([passim.subcorpus, fgp.subcorpus, ktiv.subcorpus]),
       agreementFor([passim.tractate, fgp.tractate, ktiv.tractate]),
     ];
 
-    // Agreement example: all three sources present at corpus level, all agree at corpus
-    if (!compareExamples.agreement
-        && passim.corpus && fgp.corpus && ktiv.corpus
-        && ags[0] === '🟢'
-        && passim.tractate && ktiv.tractate && passim.tractate === ktiv.tractate) {
-      compareExamples.agreement = f;
-    }
-    // Enrichment example: passim has tractate but FGP and/or KTIV don't, no conflicts
-    else if (!compareExamples.enrichment
-             && passim.tractate
-             && !ags.includes('🔴')
-             && (fgp.tractate === null || ktiv.tractate === null)) {
-      compareExamples.enrichment = f;
-    }
-    // Contradiction: any row has 🔴
-    else if (!compareExamples.contradiction && ags.includes('🔴')) {
-      compareExamples.contradiction = f;
+    // Categorize. A fragment goes into at most one pool (priority: contradiction > enrichment > agreement)
+    // so contradictions don't get drowned out by the much-more-common agreements.
+    if (ags.includes('🔴')) {
+      pools.contradiction.push(f);
+    } else if (passim.tractate && (fgp.tractate === null || ktiv.tractate === null)) {
+      pools.enrichment.push(f);
+    } else if (passim.corpus && fgp.corpus && ktiv.corpus
+               && ags[0] === '🟢'
+               && passim.tractate && ktiv.tractate && passim.tractate === ktiv.tractate) {
+      pools.agreement.push(f);
     }
   }
+  comparePools = pools;
+}
+
+// Pick a random fragment from a pool, excluding the currently-shown one.
+function pickRandomFromPool(poolName) {
+  const pool = comparePools[poolName];
+  if (!pool || pool.length === 0) return null;
+  // Exclude current fragment so successive clicks show different examples
+  const candidates = pool.filter(f => !selected || f.ie !== selected.ie || parseInt(f.page,10) !== parseInt(selected.page,10));
+  // If the pool has only one fragment AND it's the current one, just return it
+  const source = candidates.length > 0 ? candidates : pool;
+  return source[Math.floor(Math.random() * source.length)];
 }
 
 function buildCompareExampleButtons() {
-  // Lazily build the cache once data is ready
-  if (!compareExamples.agreement && !compareExamples.enrichment && !compareExamples.contradiction) {
+  // Build pools once on first modal open
+  if (!comparePools.agreement) {
     findCompareExamples();
   }
   const row = document.getElementById('compare-examples-row');
   if (!row) return;
 
-  function btn(label, frag) {
-    if (!frag) {
-      return `<button class="compare-example-btn" disabled title="No example found yet — data may still be loading">${label} <span style="color:#ccc">(none)</span></button>`;
+  function btn(label, poolName) {
+    const pool = comparePools[poolName] || [];
+    if (pool.length === 0) {
+      return `<button class="compare-example-btn" disabled title="No examples in this category yet — data may still be loading">${label} <span style="color:#ccc">(none)</span></button>`;
     }
-    const onclick = `jumpToExample('${frag.ie}', ${parseInt(frag.page,10)})`;
-    const desc = `${frag.shelfmark || frag.ie}`;
-    return `<button class="compare-example-btn" onclick="${onclick}" title="${desc}">${label} <span style="color:#888;font-size:10px">${desc}</span></button>`;
+    const count = pool.length.toLocaleString();
+    return `<button class="compare-example-btn" onclick="jumpToRandomExample('${poolName}')" title="${count} ${poolName} fragments — click for a random one">${label} <span style="color:#888;font-size:10px">🎲 random of ${count}</span></button>`;
   }
 
   row.innerHTML =
-    btn('🟢 Full agreement', compareExamples.agreement) +
-    btn('🟡 Enrichment',     compareExamples.enrichment) +
-    btn('🔴 Contradiction',  compareExamples.contradiction);
+    btn('🟢 Full agreement', 'agreement') +
+    btn('🟡 Enrichment',     'enrichment') +
+    btn('🔴 Contradiction',  'contradiction');
+}
+
+function jumpToRandomExample(poolName) {
+  const f = pickRandomFromPool(poolName);
+  if (!f) return;
+  jumpToExample(f.ie, parseInt(f.page, 10));
 }
 
 function jumpToExample(ie, pg) {
