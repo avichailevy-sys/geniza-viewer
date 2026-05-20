@@ -197,6 +197,13 @@
       <div id="searchbox"><input type="text" id="searchInput" placeholder="Search fragments…" oninput="render()"></div>
       <div id="filters"></div>
       <div id="reccount"></div>
+      <div id="loading-indicator" style="padding:20px 12px;">
+        <div style="font-size:11px;color:#888;margin-bottom:8px;font-family:'JetBrains Mono',monospace">⏳ Loading fragment data…</div>
+        <div style="background:#eee;border-radius:4px;height:6px;overflow:hidden;margin-bottom:6px;">
+          <div id="loading-bar" style="height:100%;width:5%;background:linear-gradient(90deg,#1F5C99,#4a90d9);border-radius:4px;transition:width 0.4s ease;"></div>
+        </div>
+        <div id="loading-status" style="font-size:9px;color:#bbb;font-family:'JetBrains Mono',monospace;">Fetching records…</div>
+      </div>
       <div id="fraglist"></div>
       <div id="pagination" style="display:none;padding:8px 10px;border-top:1px solid #e8e8e0;justify-content:space-between;align-items:center;flex-shrink:0;">
         <button id="prevBtn" onclick="changePage(-1)" style="padding:3px 10px;background:#fff;border:1px solid #ccc;border-radius:3px;font-size:11px;cursor:pointer">← Prev</button>
@@ -547,19 +554,6 @@ function buildFilters() {
   btnE.style.fontWeight = filterEnrichment ? 'bold' : 'normal';
   btnE.onclick = () => { filterEnrichment = !filterEnrichment; render(); };
   wrap.appendChild(btnE);
-  // Debug button (temporary)
-  const btnD = document.createElement('button');
-  btnD.className = 'filter-btn';
-  btnD.textContent = '🔍 Debug';
-  btnD.style.cssText = 'background:#eee;color:#333;border-color:#ccc;font-size:8px;';
-  btnD.onclick = () => {
-    const f = frags[0];
-    const fgpKeys = Object.keys(fgpData).slice(0,3);
-    const fgpEntry = fgpData[f.alma];
-    const dtype = getDisagreementType(f);
-    alert(`First fragment:\nALMA: ${f.alma}\nSrc: ${f.src}\nTitle: ${f.title}\nFGP entry: ${fgpEntry ? JSON.stringify(fgpEntry).slice(0,80) : 'NOT FOUND'}\nFGP sample keys: ${fgpKeys.join(', ')}\nDisagreement type: ${dtype}\nfilterContradiction: ${filterContradiction}`);
-  };
-  wrap.appendChild(btnD);
 }
 
 // ── Render fragment list ───────────────────────────────────────────────────
@@ -1106,25 +1100,39 @@ function parseRows(data) {
   }).filter(r => r.ie && r.src && r.coverage >= 0.5);
 }
 
+function updateLoading(pct, msg) {
+  const bar = document.getElementById('loading-bar');
+  const status = document.getElementById('loading-status');
+  if (bar) bar.style.width = pct + '%';
+  if (status) status.textContent = msg;
+}
+function hideLoading() {
+  const el = document.getElementById('loading-indicator');
+  if (el) el.style.display = 'none';
+}
+
 document.getElementById('recCount').textContent = 'Loading…';
 document.getElementById('sampleBadge').style.display = 'none';
+updateLoading(5, 'Fetching records…');
 
 // Fetch viewer data v2 (pairwise passim results) in two parts
 Promise.all([
-  fetch('vd2_1.json').then(r => r.json()),
-  fetch('vd2_2.json').then(r => r.json())
+  fetch('vd2_1.json').then(r => { updateLoading(20, 'Loading alignment data (part 1)…'); return r.json(); }),
+  fetch('vd2_2.json').then(r => { updateLoading(40, 'Loading alignment data (part 2)…'); return r.json(); })
 ]).then(([d1, d2]) => {
   viewerData = Object.assign({}, d1, d2);
   vdLoaded = true;
+  updateLoading(60, 'Alignment data ready.');
   console.log('Viewer data loaded:', Object.keys(viewerData).length);
   if (selected) { showTranscription(selected); showSefaria(selected); }
 }).catch(e => console.log('Viewer data not available:', e.message));
 
 // Fetch FGP domain data
 fetch('fgp_domains.json')
-  .then(r => r.json())
+  .then(r => { updateLoading(70, 'Loading FGP classifications…'); return r.json(); })
   .then(data => {
     fgpData = data;
+    updateLoading(80, 'FGP data ready.');
     console.log('FGP data loaded:', Object.keys(data).length);
     if (selected) { showTranscription(selected); showSefaria(selected); }
   })
@@ -1141,19 +1149,22 @@ Promise.all([
 }).catch(e => console.log('Transcriptions not available:', e.message));
 
 fetch('data.tsv')
-  .then(r => { if (!r.ok) throw new Error('not found'); return r.text(); })
+  .then(r => { updateLoading(85, 'Loading fragment list…'); if (!r.ok) throw new Error('not found'); return r.text(); })
   .then(text => {
+    updateLoading(95, 'Parsing fragment records…');
     Papa.parse(text, {
       header: true, delimiter: '\t', skipEmptyLines: true,
       complete: function(result) {
         const rows = parseRows(result.data);
         if (rows.length > 0) { frags = rows; isSample = false; selected = null; }
+        updateLoading(100, 'Ready.');
+        hideLoading();
         buildFilters();
         render();
       }
     });
   })
-  .catch(() => { render(); });
+  .catch(() => { hideLoading(); render(); });
 </script>
   <!-- Catalog modal -->
   <div id="catalog-modal-overlay" onclick="closeCatalogModal(event)">
