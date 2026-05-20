@@ -449,35 +449,39 @@ let htrUrl = '';
 
 // ── Disagreement detection helpers ────────────────────────────────────────
 function getDisagreementType(f) {
-  const fgpEntry = fgpData[f.alma];
-  const passimCorpus = getCorpus(f.src);
-  const fgpCorpus = fgpEntry ? fgpToCorpus(fgpEntry.d) : null;
-  const ktiv = parseKtivTitle(f.title);
-  const ktivCorpus = ktiv ? ktiv.corpus : null;
+  try {
+    const fgpEntry = fgpData[f.alma] || fgpData['0' + f.alma] || fgpData[f.alma.replace(/^0+/,'')];
+    const passimCorpus = getCorpus(f.src);
+    const fgpCorpus = fgpEntry ? fgpToCorpus(fgpEntry.d) : null;
+    const ktiv = parseKtivTitle(f.title);
+    const ktivCorpus = ktiv ? ktiv.corpus : null;
 
-  function normCorpus(c, src) {
-    if (c !== 'talmud') return c;
-    if (src && src.includes('yerushalmi')) return 'talmud_yerushalmi';
-    return 'talmud_bavli';
+    function normCorpus(c, src) {
+      if (c !== 'talmud') return c;
+      if (src && src.includes('yerushalmi')) return 'talmud_yerushalmi';
+      return 'talmud_bavli';
+    }
+    const pNorm = normCorpus(passimCorpus, f.src);
+    const fNorm = fgpCorpus;
+    const kNorm = ktivCorpus === 'talmud'
+      ? (ktiv && ktiv.corpusEn && ktiv.corpusEn.includes('Jerusalem') ? 'talmud_yerushalmi' : 'talmud_bavli')
+      : ktivCorpus;
+
+    const known = [fNorm, kNorm].filter(v => v !== null && v !== undefined);
+    if (known.length > 0 && known.some(v => v !== pNorm)) return 'contradiction';
+
+    const pParsed = parseSefariaSrc(f.src);
+    const hasTractate = pParsed.tractateEn && pParsed.tractateEn.length > 0;
+    const ktivVague = !ktiv || !ktiv.corpus ||
+      (f.title && (f.title.includes('קטע גניזה') || f.title.includes('תחום לא מזוהה'))) ||
+      (ktiv.corpus && (!ktiv.tractateEn || ktiv.tractateEn === ''));
+    const fgpVague = !fgpEntry || !fgpCorpus;
+    if (hasTractate && (ktivVague || fgpVague)) return 'enrichment';
+
+    return null;
+  } catch(e) {
+    return null;
   }
-  const pNorm = normCorpus(passimCorpus, f.src);
-  const fNorm = fgpCorpus;
-  const kNorm = ktivCorpus === 'talmud'
-    ? (ktiv && ktiv.corpusEn && ktiv.corpusEn.includes('Jerusalem') ? 'talmud_yerushalmi' : 'talmud_bavli')
-    : ktivCorpus;
-
-  const known = [fNorm, kNorm].filter(v => v !== null && v !== undefined);
-  if (known.length > 0 && known.some(v => v !== pNorm)) return 'contradiction';
-
-  const pParsed = parseSefariaSrc(f.src);
-  const hasTractate = pParsed.tractateEn && pParsed.tractateEn.length > 0;
-  const ktivVague = !ktiv || !ktiv.corpus ||
-    (f.title && (f.title.includes('קטע גניזה') || f.title.includes('תחום לא מזוהה'))) ||
-    (ktiv.corpus && (!ktiv.tractateEn || ktiv.tractateEn === ''));
-  const fgpVague = !fgpEntry || !fgpCorpus;
-  if (hasTractate && (ktivVague || fgpVague)) return 'enrichment';
-
-  return null;
 }
 
 // ── Filtered list ──────────────────────────────────────────────────────────
@@ -543,6 +547,19 @@ function buildFilters() {
   btnE.style.fontWeight = filterEnrichment ? 'bold' : 'normal';
   btnE.onclick = () => { filterEnrichment = !filterEnrichment; render(); };
   wrap.appendChild(btnE);
+  // Debug button (temporary)
+  const btnD = document.createElement('button');
+  btnD.className = 'filter-btn';
+  btnD.textContent = '🔍 Debug';
+  btnD.style.cssText = 'background:#eee;color:#333;border-color:#ccc;font-size:8px;';
+  btnD.onclick = () => {
+    const f = frags[0];
+    const fgpKeys = Object.keys(fgpData).slice(0,3);
+    const fgpEntry = fgpData[f.alma];
+    const dtype = getDisagreementType(f);
+    alert(`First fragment:\nALMA: ${f.alma}\nSrc: ${f.src}\nTitle: ${f.title}\nFGP entry: ${fgpEntry ? JSON.stringify(fgpEntry).slice(0,80) : 'NOT FOUND'}\nFGP sample keys: ${fgpKeys.join(', ')}\nDisagreement type: ${dtype}\nfilterContradiction: ${filterContradiction}`);
+  };
+  wrap.appendChild(btnD);
 }
 
 // ── Render fragment list ───────────────────────────────────────────────────
