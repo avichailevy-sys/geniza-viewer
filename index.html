@@ -421,6 +421,22 @@ function parseSefariaSrc(src) {
   } else if (c === 'tanakh') {
     tractateEn = parts[parts.length - 1] || '';
     tractateHe = SEF_HE[tractateEn] || tractateEn;
+  } else if (c === 'liturgy' || c === 'mishneh' || c === 'zohar' || c === 'midrash') {
+    // For corpora without dedicated parsing, use the last component of the src
+    // (passim's Sefaria-derived src is always at least <corpus>_<work>).
+    if (parts.length >= 2) {
+      // Clean up: strip leading corpus-name redundancy like "Mishneh Torah, Hilchot..."
+      let work = parts[parts.length - 1] || '';
+      // Many Sefaria slugs use comma-separated components; keep them
+      work = work.replace(/^Mishneh\s+Torah[,\s]+/i, '').trim();
+      tractateEn = work;
+      tractateHe = SEF_HE[work] || work;
+    }
+  }
+  // Fallback: if still empty but we have at least 2 parts, use the last one
+  if (!tractateEn && parts.length >= 2) {
+    tractateEn = parts[parts.length - 1];
+    tractateHe = SEF_HE[tractateEn] || tractateEn;
   }
   return { corpus: c, corpusEn, corpusHe, tractateEn, tractateHe };
 }
@@ -849,7 +865,7 @@ function showTranscription(f) {
       <span class="id-val">${pParsed.corpusEn}</span>
     </div>
     ${pParsed.tractateEn ? `<div class="id-row">
-      <span class="id-key" style="color:#aaa">Tractate / Book</span>
+      <span class="id-key" style="color:#aaa">Work</span>
       <span class="id-val">${pParsed.tractateEn}</span>
     </div>` : ''}
     <div class="id-row">
@@ -1428,7 +1444,7 @@ function openCompareModal() {
   const rows = [
     { name: 'Corpus',     p: passim.corpus,     fg: fgp.corpus,     k: ktiv.corpus     },
     { name: 'Sub-corpus', p: passim.subcorpus,  fg: fgp.subcorpus,  k: ktiv.subcorpus  },
-    { name: 'Tractate',   p: passim.tractate,   fg: fgp.tractate,   k: ktiv.tractate   },
+    { name: 'Work',       p: passim.tractate,   fg: fgp.tractate,   k: ktiv.tractate   },
   ];
 
   function cell(v) {
@@ -1505,16 +1521,25 @@ function findCompareExamples() {
       agreementFor([passim.tractate, fgp.tractate, ktiv.tractate]),
     ];
 
-    // Categorize. A fragment goes into at most one pool (priority: contradiction > enrichment > agreement)
-    // so contradictions don't get drowned out by the much-more-common agreements.
-    if (ags.includes('🔴')) {
+    // Categorize. Pools overlap: a fragment can appear in more than one pool
+    // (e.g. a fragment with one 🟢 row and one 🔴 row goes into both the
+    // agreement pool — for the 🟢 row — and the contradiction pool — for the 🔴).
+    // Rules (matching the visual indicator system):
+    //   🟢 Agreement pool:    any row is 🟢 AND no row is 🔴
+    //   🟡 Enrichment pool:   any row is 🟡 AND no row is 🔴
+    //   🔴 Contradiction pool: any row is 🔴
+    const hasContradiction = ags.includes('🔴');
+    const hasAgreement = ags.includes('🟢');
+    const hasEnrichment = ags.includes('🟡');
+
+    if (hasContradiction) {
       pools.contradiction.push(f);
-    } else if (passim.tractate && (fgp.tractate === null || ktiv.tractate === null)) {
-      pools.enrichment.push(f);
-    } else if (passim.corpus && fgp.corpus && ktiv.corpus
-               && ags[0] === '🟢'
-               && passim.tractate && ktiv.tractate && passim.tractate === ktiv.tractate) {
+    }
+    if (hasAgreement && !hasContradiction) {
       pools.agreement.push(f);
+    }
+    if (hasEnrichment && !hasContradiction) {
+      pools.enrichment.push(f);
     }
   }
   comparePools = pools;
