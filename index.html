@@ -486,7 +486,10 @@ function fgpToCorpus(domain) {
   if (d.includes('mishnah')) return 'mishnah';
   if (d.includes('yerushalmi') || d.includes('jerusalem talmud') || d.includes('palestinian talmud')) return 'talmud_yerushalmi';
   if (d.includes('talmud bavli') || d.includes('babylonian')) return 'talmud_bavli';
-  if (d.includes('talmud')) return 'talmud';
+  // Bare "Talmud" (without Bavli/Yerushalmi qualifier) — treat as Bavli per
+  // scholarly convention. FGP almost always qualifies Yerushalmi explicitly,
+  // so unqualified "Talmud" effectively means Bavli.
+  if (d.includes('talmud')) return 'talmud_bavli';
   if (d.includes('bible') || d.includes('tanakh') || d.includes('scripture') || d.includes('torah text')) return 'tanakh';
   if (d.includes('liturgy') || d.includes('piyyut') || d.includes('prayer')) return 'liturgy';
   if (d.includes('zohar') || d.includes('kabbalah')) return 'zohar';
