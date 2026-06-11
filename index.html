@@ -1652,6 +1652,11 @@ function findCompareExamples() {
   // Build full pools, not just one example per category.
   const pools = { agreement: [], enrichment: [], contradiction: [] };
   for (const f of frags) {
+    // Exclude Mishneh Torah — see computeFragmentStats for the rationale.
+    // We don't want the demo to randomly land on a fragment whose comparison
+    // is structurally degraded by a known data-pipeline issue.
+    if (f.src === 'mishneh_torah') continue;
+
     const passim = normalizePassim(f);
     const fgpEntry = fgpData[f.alma] || fgpData['0' + f.alma] || fgpData[f.alma.replace(/^0+/,'')];
     const fgp = normalizeFgp(fgpEntry);
@@ -1859,7 +1864,21 @@ function computeFragmentStats() {
   const byCorpus = {}; // corpusKey -> { total, agreement, enrichment, contradiction }
   const enrichmentDir = { passim: 0, catalog: 0, both: 0 };
 
+  // Mishneh Torah is excluded from the statistics due to a known data-pipeline
+  // anomaly: the per-fragment summary statistics in data.tsv (count, coverage)
+  // suggest passim was once run against Mishneh Torah, but the granular alignment
+  // data (matched text, locations) is not present in the current dataset. The
+  // fragments remain browseable in the tool, but their classification cannot be
+  // computed meaningfully under our scheme.
+  let excludedMishnehTorah = 0;
+  let analyzed = 0;
+
   for (const f of frags) {
+    if (f.src === 'mishneh_torah') {
+      excludedMishnehTorah++;
+      continue;
+    }
+    analyzed++;
     const cls = classifyFragmentStrict(f);
     totals[cls]++;
 
@@ -1878,7 +1897,9 @@ function computeFragmentStats() {
     totals,
     byCorpus,
     enrichmentDir,
-    grandTotal: frags.length
+    grandTotal: analyzed,
+    excludedMishnehTorah,
+    totalInCorpus: frags.length,
   };
   return fragmentStats;
 }
@@ -2004,22 +2025,27 @@ function renderStatsModal() {
     </table>
   `;
 
+  const excludedNote = s.excludedMishnehTorah > 0
+    ? `<br><br><strong>Mishneh Torah excluded.</strong> ${s.excludedMishnehTorah.toLocaleString()} fragments cataloged as Mishneh Torah are excluded from these statistics due to a known data-pipeline anomaly affecting only this corpus: passim coverage statistics survive in the summary data, but the granular alignment data needed for classification is not present in the current dataset. These fragments remain browseable in the tool with their bibliographic identifications.`
+    : '';
+
   const noteHTML = `
     <div class="stats-note">
-      <strong>Strict-strict classification.</strong> A fragment is counted as 🟢 only when all three sources speak at every level and concur fully.
+      <strong>Strict fragment-level classification.</strong> A fragment is counted as 🟢 only when all three sources speak at every level and concur fully.
       Any informational asymmetry (one source adds detail another lacks) classifies the fragment as 🟡 enrichment — even where sources agree where they speak.
       Any active disagreement at any level makes the fragment 🔴.
-      <br><br>
-      Note: Mishneh Torah is not in the passim reference corpus, so passim is structurally silent for these fragments;
-      the catalog-side identifications still appear. This pattern shapes the by-corpus breakdown above.
+      ${excludedNote}
     </div>
   `;
 
   document.getElementById('stats-modal-content').innerHTML =
     headlineHTML + byCorpusHTML + enrichmentHTML + noteHTML;
 
-  document.getElementById('stats-modal-sub').textContent =
-    `Strict fragment-level classification of ${total.toLocaleString()} fragments.`;
+  const subtitleText = s.excludedMishnehTorah > 0
+    ? `Strict fragment-level classification of ${total.toLocaleString()} fragments (${s.excludedMishnehTorah.toLocaleString()} Mishneh Torah excluded; ${s.totalInCorpus.toLocaleString()} total in corpus).`
+    : `Strict fragment-level classification of ${total.toLocaleString()} fragments.`;
+
+  document.getElementById('stats-modal-sub').textContent = subtitleText;
 }
 
 // Enable the stats button once data is loaded.
