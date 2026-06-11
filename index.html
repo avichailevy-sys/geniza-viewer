@@ -250,6 +250,67 @@
   }
   #compareBtn:hover { background: #18497a; }
   #compareBtn:disabled { background: #aaa; cursor: not-allowed; box-shadow: none; }
+
+  /* Fragment-level analysis button (in stats bar) */
+  #statsBtn {
+    padding: 3px 12px; background: #fff; border: 1px solid #ccc;
+    color: #444; border-radius: 3px; font-size: 10px; cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    margin-right: 8px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  #statsBtn:hover { background: #f4f8fc; border-color: #1F5C99; color: #1F5C99; }
+  #statsBtn:disabled { color: #ccc; cursor: not-allowed; background: #f8f8f8; }
+
+  /* Stats modal */
+  #stats-modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45); z-index: 1100; align-items: center; justify-content: center;
+  }
+  #stats-modal-overlay.open { display: flex; }
+  #stats-modal {
+    background: #fff; border-radius: 8px; padding: 24px 28px 20px 28px;
+    max-width: 760px; width: 92%;
+    max-height: 88vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+    position: relative;
+  }
+  #stats-modal h3 {
+    font-size: 14px; color: #1F5C99; font-weight: 700; margin-bottom: 4px;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: .08em;
+  }
+  #stats-modal .stats-sub {
+    font-size: 11px; color: #888; margin-bottom: 18px; font-family: 'Source Serif 4', serif;
+  }
+  #stats-modal .close-btn {
+    position: absolute; top: 12px; right: 16px; background: none; border: none;
+    font-size: 20px; cursor: pointer; color: #aaa; line-height: 1;
+  }
+  #stats-modal .close-btn:hover { color: #333; }
+  #stats-modal .section-title {
+    font-size: 10px; color: #888; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; margin: 20px 0 8px 0; font-family: 'JetBrains Mono', monospace;
+    border-bottom: 1px solid #e8e8e0; padding-bottom: 4px;
+  }
+  table.stats-table {
+    width: 100%; border-collapse: collapse; font-family: 'Source Serif 4', serif;
+    font-size: 12px;
+  }
+  table.stats-table th {
+    background: #f4f4f0; padding: 6px 8px; font-size: 10px; font-weight: 700;
+    color: #555; text-align: left; border-bottom: 1px solid #ddd;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: .04em;
+  }
+  table.stats-table td { padding: 6px 8px; border-bottom: 1px solid #f0f0e8; color: #333; }
+  table.stats-table td.num { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  table.stats-table td.pct { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; min-width: 56px; }
+  table.stats-table tr.headline td { font-size: 14px; padding: 10px 8px; font-weight: 600; }
+  table.stats-table tr.headline td.num { font-size: 16px; color: #1F5C99; }
+  table.stats-table tr.zero td { color: #bbb; }
+  .stats-note {
+    font-size: 10px; color: #888; font-style: italic;
+    margin-top: 12px; padding: 8px 10px; background: #fafaf6; border-left: 2px solid #ddd;
+    line-height: 1.5;
+  }
 </style>
 </head>
 <body>
@@ -271,7 +332,9 @@
     <span class="sample-badge" id="sampleBadge">SAMPLE DATA</span>
     <span class="rec-count" id="recCount">0 records</span>
     <div class="spacer"></div>
-
+    <button id="statsBtn" onclick="openStatsModal()" disabled title="Open fragment-level analysis report">
+      📊 <span>Fragment-level Analysis</span>
+    </button>
     <span class="mono" style="font-size:9px;color:#ccc">passim · Geniza→Sefaria · Exp.01</span>
   </div>
 
@@ -1688,6 +1751,296 @@ function jumpToExample(ie, pg) {
   // Reopen the comparison modal with this new fragment
   openCompareModal();
 }
+
+// ── Fragment-level (strict) analysis ─────────────────────────────────────
+// Strict-strict definition for a single fragment, applied to the row-by-row
+// comparison of the three normalized sources (passim, FGP, KTIV).
+//
+// - Agreement:   all three sources have data at every level where any source
+//                speaks, and they all match. No source adds detail no other has.
+// - Enrichment:  no contradictions anywhere, but at least one source supplies
+//                information another lacks. The fragment is "enrichable" — the
+//                comparison adds value.
+// - Contradiction: at least one pair of sources actively disagrees at some level.
+//
+// Single-source fragments (where only one source has any data) fold into
+// enrichment per our design decision.
+function classifyFragmentStrict(f) {
+  const passim = normalizePassim(f);
+  const fgpEntry = fgpData[f.alma] || fgpData['0' + f.alma] || fgpData[f.alma.replace(/^0+/,'')];
+  const fgp = normalizeFgp(fgpEntry);
+  const ktiv = normalizeKtiv(f.title);
+
+  const rows = [
+    [passim.corpus,    fgp.corpus,    ktiv.corpus   ],
+    [passim.subcorpus, fgp.subcorpus, ktiv.subcorpus],
+    [passim.tractate,  fgp.tractate,  ktiv.tractate ],
+  ];
+
+  let anyContradiction = false;
+  let anyEnrichment = false;
+  let anyFullAgreement = false;
+
+  for (const row of rows) {
+    const present = row.filter(v => v !== null && v !== undefined);
+    if (present.length === 0) continue; // no data at this level — skip
+    // contradiction: at least two non-null values that disagree
+    const allEqual = present.every(v => v === present[0]);
+    if (!allEqual) { anyContradiction = true; continue; }
+    // all present values agree at this row
+    if (present.length === 3) anyFullAgreement = true;
+    else anyEnrichment = true; // someone is silent at this level → enrichment
+  }
+
+  if (anyContradiction) return 'contradiction';
+  if (anyEnrichment) return 'enrichment';
+  if (anyFullAgreement) return 'agreement';
+  // No row had any data — degenerate case, treat as enrichment per spec
+  return 'enrichment';
+}
+
+// Determine "enrichment direction" for an enrichment fragment.
+// Returns one of: 'passim', 'catalog', 'both' — describing which sources
+// contributed detail others lacked. Used in the by-direction breakdown.
+function enrichmentDirection(f) {
+  const passim = normalizePassim(f);
+  const fgpEntry = fgpData[f.alma] || fgpData['0' + f.alma] || fgpData[f.alma.replace(/^0+/,'')];
+  const fgp = normalizeFgp(fgpEntry);
+  const ktiv = normalizeKtiv(f.title);
+
+  // For each row, count which sources have data
+  let passimAddsDetail = false;
+  let catalogAddsDetail = false;
+
+  const rows = [
+    { p: passim.corpus,    fg: fgp.corpus,    k: ktiv.corpus    },
+    { p: passim.subcorpus, fg: fgp.subcorpus, k: ktiv.subcorpus },
+    { p: passim.tractate,  fg: fgp.tractate,  k: ktiv.tractate  },
+  ];
+
+  for (const row of rows) {
+    const pHas = row.p !== null && row.p !== undefined;
+    const fgHas = row.fg !== null && row.fg !== undefined;
+    const kHas = row.k !== null && row.k !== undefined;
+    const catalogHas = fgHas || kHas;
+    // Passim adds detail at this level: passim has, neither catalog source has
+    if (pHas && !catalogHas) passimAddsDetail = true;
+    // Catalog adds detail at this level: at least one catalog has, passim doesn't
+    if (catalogHas && !pHas) catalogAddsDetail = true;
+  }
+
+  if (passimAddsDetail && catalogAddsDetail) return 'both';
+  if (passimAddsDetail) return 'passim';
+  if (catalogAddsDetail) return 'catalog';
+  // Neither side adds anything the other doesn't have — this shouldn't happen for
+  // a fragment classified as enrichment, but as a fallback return 'both'.
+  return 'both';
+}
+
+// Get a presentation corpus key for breakdown grouping. Uses the *passim* corpus
+// if available (since that reflects what passim actually identified), falling
+// back to the catalog's corpus, and finally to the f.src token.
+function presentationCorpus(f) {
+  const passim = normalizePassim(f);
+  if (passim.corpus) return passim.corpus;
+  const ktiv = normalizeKtiv(f.title);
+  if (ktiv.corpus) return ktiv.corpus;
+  const fgpEntry = fgpData[f.alma] || fgpData['0' + f.alma] || fgpData[f.alma.replace(/^0+/,'')];
+  const fgp = normalizeFgp(fgpEntry);
+  if (fgp.corpus) return fgp.corpus;
+  // Final fallback: use the catalog-side src
+  return getCorpus(f.src) || 'unknown';
+}
+
+let fragmentStats = null; // cached on first computation
+
+function computeFragmentStats() {
+  const totals = { agreement: 0, enrichment: 0, contradiction: 0 };
+  const byCorpus = {}; // corpusKey -> { total, agreement, enrichment, contradiction }
+  const enrichmentDir = { passim: 0, catalog: 0, both: 0 };
+
+  for (const f of frags) {
+    const cls = classifyFragmentStrict(f);
+    totals[cls]++;
+
+    const corp = presentationCorpus(f);
+    if (!byCorpus[corp]) byCorpus[corp] = { total: 0, agreement: 0, enrichment: 0, contradiction: 0 };
+    byCorpus[corp].total++;
+    byCorpus[corp][cls]++;
+
+    if (cls === 'enrichment') {
+      const dir = enrichmentDirection(f);
+      enrichmentDir[dir]++;
+    }
+  }
+
+  fragmentStats = {
+    totals,
+    byCorpus,
+    enrichmentDir,
+    grandTotal: frags.length
+  };
+  return fragmentStats;
+}
+
+function openStatsModal() {
+  // Compute on first open; cache thereafter
+  if (!fragmentStats) computeFragmentStats();
+  renderStatsModal();
+  document.getElementById('stats-modal-overlay').classList.add('open');
+}
+
+function closeStatsModal(eOrForce) {
+  if (eOrForce === true) {
+    document.getElementById('stats-modal-overlay').classList.remove('open');
+    return;
+  }
+  if (eOrForce && eOrForce.target === document.getElementById('stats-modal-overlay')) {
+    document.getElementById('stats-modal-overlay').classList.remove('open');
+  }
+}
+
+function renderStatsModal() {
+  const s = fragmentStats;
+  if (!s) return;
+  const total = s.grandTotal;
+  const pct = (n) => total > 0 ? ((n / total) * 100).toFixed(1) + '%' : '—';
+
+  // Headline table
+  const headlineHTML = `
+    <table class="stats-table">
+      <thead>
+        <tr><th>Category</th><th style="text-align:right">Fragments</th><th style="text-align:right">Share</th></tr>
+      </thead>
+      <tbody>
+        <tr class="headline">
+          <td>🟢 Full agreement</td>
+          <td class="num">${s.totals.agreement.toLocaleString()}</td>
+          <td class="pct">${pct(s.totals.agreement)}</td>
+        </tr>
+        <tr class="headline">
+          <td>🟡 Enrichment</td>
+          <td class="num">${s.totals.enrichment.toLocaleString()}</td>
+          <td class="pct">${pct(s.totals.enrichment)}</td>
+        </tr>
+        <tr class="headline">
+          <td>🔴 Contradiction</td>
+          <td class="num">${s.totals.contradiction.toLocaleString()}</td>
+          <td class="pct">${pct(s.totals.contradiction)}</td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+
+  // By-corpus breakdown
+  const CORPUS_DISPLAY = {
+    tanakh: 'Tanakh', mishnah: 'Mishnah',
+    talmud_bavli: 'Talmud Bavli', talmud_yerushalmi: 'Jerusalem Talmud',
+    talmud: 'Talmud (unspecified)', liturgy: 'Liturgy', mishneh: 'Mishneh Torah',
+    zohar: 'Zohar', midrash: 'Rabbinic / Midrash', unknown: 'Other / Uncategorized'
+  };
+  const corpusEntries = Object.entries(s.byCorpus)
+    .sort((a, b) => b[1].total - a[1].total);
+
+  const corpusRowsHTML = corpusEntries.map(([key, v]) => {
+    const label = CORPUS_DISPLAY[key] || key;
+    const isMishnehTorah = key === 'mishneh';
+    const note = isMishnehTorah
+      ? '<span style="font-size:9px;color:#999;font-style:italic;margin-left:6px">passim not in reference corpus</span>'
+      : '';
+    return `
+      <tr${v.agreement === 0 && v.enrichment === 0 && v.contradiction === 0 ? ' class="zero"' : ''}>
+        <td>${label}${note}</td>
+        <td class="num">${v.total.toLocaleString()}</td>
+        <td class="num" style="color:#217a47">${v.agreement.toLocaleString()}</td>
+        <td class="num" style="color:#b07010">${v.enrichment.toLocaleString()}</td>
+        <td class="num" style="color:#c04000">${v.contradiction.toLocaleString()}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const byCorpusHTML = `
+    <div class="section-title">Classification by corpus</div>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Corpus (as identified by passim, when available)</th>
+          <th style="text-align:right">Total</th>
+          <th style="text-align:right">🟢 Agree</th>
+          <th style="text-align:right">🟡 Enrich</th>
+          <th style="text-align:right">🔴 Conflict</th>
+        </tr>
+      </thead>
+      <tbody>${corpusRowsHTML}</tbody>
+    </table>
+  `;
+
+  // Enrichment direction
+  const enrTotal = s.enrichmentDir.passim + s.enrichmentDir.catalog + s.enrichmentDir.both;
+  const enrPct = (n) => enrTotal > 0 ? ((n / enrTotal) * 100).toFixed(1) + '%' : '—';
+  const enrichmentHTML = `
+    <div class="section-title">Enrichment direction (of ${s.totals.enrichment.toLocaleString()} enrichments)</div>
+    <table class="stats-table">
+      <thead>
+        <tr><th>Direction</th><th style="text-align:right">Fragments</th><th style="text-align:right">Share</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Passim adds detail catalogs lack</td>
+          <td class="num">${s.enrichmentDir.passim.toLocaleString()}</td>
+          <td class="pct">${enrPct(s.enrichmentDir.passim)}</td>
+        </tr>
+        <tr>
+          <td>Catalog adds detail passim lacks</td>
+          <td class="num">${s.enrichmentDir.catalog.toLocaleString()}</td>
+          <td class="pct">${enrPct(s.enrichmentDir.catalog)}</td>
+        </tr>
+        <tr>
+          <td>Both contribute non-overlapping detail</td>
+          <td class="num">${s.enrichmentDir.both.toLocaleString()}</td>
+          <td class="pct">${enrPct(s.enrichmentDir.both)}</td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+
+  const noteHTML = `
+    <div class="stats-note">
+      <strong>Strict-strict classification.</strong> A fragment is counted as 🟢 only when all three sources speak at every level and concur fully.
+      Any informational asymmetry (one source adds detail another lacks) classifies the fragment as 🟡 enrichment — even where sources agree where they speak.
+      Any active disagreement at any level makes the fragment 🔴.
+      <br><br>
+      Note: Mishneh Torah is not in the passim reference corpus, so passim is structurally silent for these fragments;
+      the catalog-side identifications still appear. This pattern shapes the by-corpus breakdown above.
+    </div>
+  `;
+
+  document.getElementById('stats-modal-content').innerHTML =
+    headlineHTML + byCorpusHTML + enrichmentHTML + noteHTML;
+
+  document.getElementById('stats-modal-sub').textContent =
+    `Strict fragment-level classification of ${total.toLocaleString()} fragments.`;
+}
+
+// Enable the stats button once data is loaded.
+// We hook this via the same logic used for the compare button: when
+// showTranscription enables compareBtn, also enable statsBtn.
+(function() {
+  // Watch for compareBtn enabling and mirror to statsBtn
+  const interval = setInterval(() => {
+    const compareBtn = document.getElementById('compareBtn');
+    const statsBtn = document.getElementById('statsBtn');
+    if (compareBtn && statsBtn && !compareBtn.disabled && statsBtn.disabled) {
+      statsBtn.disabled = false;
+    }
+    // Stop watching after both are enabled or after 5 minutes
+    if (compareBtn && statsBtn && !statsBtn.disabled) {
+      clearInterval(interval);
+    }
+  }, 1000);
+  // Stop after 5 minutes regardless
+  setTimeout(() => clearInterval(interval), 300000);
+})();
 </script>
   <!-- Catalog modal -->
   <div id="catalog-modal-overlay" onclick="closeCatalogModal(event)">
@@ -1712,6 +2065,17 @@ function jumpToExample(ie, pg) {
       <div class="compare-examples">
         <div class="compare-examples-label">Biblissima — jump to example fragments</div>
         <div class="compare-examples-row" id="compare-examples-row"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Fragment-level Analysis modal -->
+  <div id="stats-modal-overlay" onclick="closeStatsModal(event)">
+    <div id="stats-modal">
+      <button class="close-btn" onclick="closeStatsModal(true)">✕</button>
+      <h3>📊 Fragment-level Analysis</h3>
+      <div class="stats-sub" id="stats-modal-sub">Strict-strict classification of fragments across three identification sources.</div>
+      <div id="stats-modal-content">
+        <div style="padding:30px;text-align:center;color:#888;font-style:italic">Computing statistics…</div>
       </div>
     </div>
   </div>
