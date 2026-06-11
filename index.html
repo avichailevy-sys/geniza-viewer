@@ -847,21 +847,32 @@ function showTranscription(f) {
   if (cmpBtn) cmpBtn.disabled = false;
 
   // ── Passim Identification box (blue, parallel to FGP and Catalog) ──
-  // Native passim/Sefaria fields, unnormalized — the comparison modal handles normalization.
-  const pParsed = parseSefariaSrc(f.src);
+  // Use the actual passim match (from vdEntry) when present. When passim has nothing
+  // to align (e.g., Mishneh Torah, which is not in the passim reference corpus),
+  // show honest silence rather than echoing the catalog-attached f.src placeholder.
   const matches = (vdEntry && vdEntry.matches) ? vdEntry.matches : [];
   const topMatch = matches.length > 0 ? matches[0] : null;
+  const hasRealMatch = !!topMatch;
   const matchRate = topMatch ? Math.round(topMatch.rate * 100) : Math.round((f.coverage || 0) * 100);
   const passageCount = topMatch && topMatch.n ? topMatch.n : null;
   const reversed = topMatch && topMatch.reversed;
   const refsList = matches.slice(0, 5).map(m => getSrcLabel(m.src)).join(' · ');
 
-  const passimSummary = `${pParsed.corpusEn}${pParsed.tractateEn ? ' · ' + pParsed.tractateEn : ''} · ${matchRate}% match`;
+  // Parse the actual passim match (when present) for display in the box
+  const pParsed = hasRealMatch ? parseSefariaSrc(topMatch.src) : parseSefariaSrc(f.src);
+  const topLocs = topMatch && topMatch.locs ? topMatch.locs : [];
 
-  const passimDetail = `
+  let passimSummary;
+  if (hasRealMatch) {
+    passimSummary = `${pParsed.corpusEn}${pParsed.tractateEn ? ' · ' + pParsed.tractateEn : ''} · ${matchRate}% match`;
+  } else {
+    passimSummary = `<span style="color:#999;font-style:italic">no passim alignment available</span>`;
+  }
+
+  const passimDetail = hasRealMatch ? `
     <div class="id-row" style="margin-top:6px">
-      <span class="id-key" style="color:#aaa">Source string</span>
-      <span class="id-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555">${f.src}</span>
+      <span class="id-key" style="color:#aaa">Passim match</span>
+      <span class="id-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555">${topMatch.src}</span>
     </div>
     <div class="id-row">
       <span class="id-key" style="color:#aaa">Corpus</span>
@@ -871,17 +882,17 @@ function showTranscription(f) {
       <span class="id-key" style="color:#aaa">Work</span>
       <span class="id-val">${pParsed.tractateEn}</span>
     </div>` : ''}
-    <div class="id-row">
-      <span class="id-key" style="color:#aaa">Sefaria ref</span>
-      <span class="id-val">${f.sefaria_ref || '—'}</span>
-    </div>
+    ${topLocs.length > 0 ? `<div class="id-row">
+      <span class="id-key" style="color:#aaa">Reference</span>
+      <span class="id-val" style="font-size:11px;color:#444">${topLocs.slice(0, 5).join(' · ')}${topLocs.length > 5 ? ' …' : ''}</span>
+    </div>` : ''}
     <div class="id-row">
       <span class="id-key" style="color:#aaa">Match rate</span>
       <span class="id-val">${matchRate}%</span>
     </div>
-    ${matches.length > 0 ? `<div class="id-row">
-      <span class="id-key" style="color:#aaa">Matched sources</span>
-      <span class="id-val" style="font-size:11px;color:#444">${refsList}${matches.length > 5 ? ' …' : ''}</span>
+    ${matches.length > 1 ? `<div class="id-row">
+      <span class="id-key" style="color:#aaa">Other matches</span>
+      <span class="id-val" style="font-size:11px;color:#444">${matches.slice(1, 5).map(m => getSrcLabel(m.src)).join(' · ')}${matches.length > 5 ? ' …' : ''}</span>
     </div>` : ''}
     ${passageCount && passageCount > 1 ? `<div class="id-row">
       <span class="id-key" style="color:#aaa">Passages</span>
@@ -891,6 +902,23 @@ function showTranscription(f) {
       <span class="id-key" style="color:#aaa">Reading order</span>
       <span class="id-val" style="color:#c04000">⚠️ reversal detected and corrected</span>
     </div>` : ''}
+    <div class="id-row" style="margin-top:8px;border-top:1px dotted #d8e3ef;padding-top:6px">
+      <span class="id-key" style="color:#aaa;font-size:10px">Catalog-side label</span>
+      <span class="id-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#888">${f.src}</span>
+    </div>
+  ` : `
+    <div class="id-row" style="margin-top:6px">
+      <span class="id-key" style="color:#aaa">Status</span>
+      <span class="id-val" style="color:#999;font-style:italic">No passim alignment in the dataset for this fragment.</span>
+    </div>
+    <div class="id-row">
+      <span class="id-key" style="color:#aaa">Catalog-side label</span>
+      <span class="id-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555">${f.src}</span>
+    </div>
+    <div class="id-row">
+      <span class="id-key" style="color:#aaa">Note</span>
+      <span class="id-val" style="font-size:11px;color:#666">The catalog identifies this fragment, but passim's reference corpus does not currently include the matching tradition.</span>
+    </div>
   `;
 
   const passimBoxHTML = expandableBox(
@@ -1359,26 +1387,78 @@ function corpusDisplay(c) { return c ? (CORPUS_LABEL[c] || c) : null; }
 // Each field is either a string or null. null = "no data" (silent).
 
 function normalizePassim(f) {
-  const c = getCorpus(f.src);
-  const parsed = parseSefariaSrc(f.src);
-  let corpus = c, subcorpus = null, tractate = null;
-  if (c === 'talmud') {
-    corpus = f.src.includes('yerushalmi') ? 'talmud_yerushalmi' : 'talmud_bavli';
+  // Look up the actual passim match data, which tells us what passim *actually* aligned to.
+  // The catalog-side f.src is sometimes a placeholder (e.g., "mishneh_torah" when passim
+  // had nothing to align to Mishneh Torah at all). The vdEntry, when present, carries the
+  // real alignment — including granular locs that aren't reflected in f.src.
+  const pg = parseInt(f.page, 10);
+  const vdEntry = viewerData[f.ie + '_' + pg];
+  const topMatch = (vdEntry && vdEntry.matches && vdEntry.matches.length > 0)
+    ? vdEntry.matches[0] : null;
+
+  // If passim has no match in viewerData, it's silent.
+  // Special case: Mishneh Torah fragments. Daniel's TSV has a row for them with
+  // f.src = "mishneh_torah", but David's passim doesn't include Mishneh Torah as a
+  // reference corpus — so there's no real alignment. Silence is the honest answer.
+  if (!topMatch) {
+    // No real match — silence at all levels.
+    return { corpus: null, subcorpus: null, tractate: null };
   }
-  // Sub-corpus extraction from raw src parts
-  const parts = f.src.split('_');
-  if (c === 'mishnah') {
-    // mishnah_Seder Zeraim_Mishnah Maaser Sheni → sub = Seder Zeraim
-    const sederPart = parts.find(p => p.startsWith('Seder '));
-    if (sederPart) subcorpus = sederPart;
-  } else if (c === 'tanakh') {
-    // tanakh_Torah_Genesis → sub = Torah
-    if (parts.length >= 3) subcorpus = parts[1];
-  } else if (c === 'talmud') {
-    const sederPart = parts.find(p => p.startsWith('Seder '));
-    if (sederPart) subcorpus = sederPart;
+
+  // We have a real passim match. Read identification from m.src and m.locs.
+  const mSrc = topMatch.src || '';
+  const mLocs = topMatch.locs || [];
+  const mParts = mSrc.split('_');
+  const mCorpus = getCorpus(mSrc);
+
+  let corpus = mCorpus;
+  let subcorpus = null;
+  let tractate = null;
+
+  // Resolve Talmud Bavli vs Yerushalmi
+  if (mCorpus === 'talmud') {
+    corpus = mSrc.includes('yerushalmi') ? 'talmud_yerushalmi' : 'talmud_bavli';
   }
-  if (parsed.tractateEn && parsed.tractateEn.length > 0) tractate = parsed.tractateEn;
+
+  // Extract sub-corpus and work from m.src structure
+  if (mCorpus === 'mishnah') {
+    const sederPart = mParts.find(p => p.startsWith('Seder '));
+    if (sederPart) subcorpus = sederPart;
+    const last = (mParts[mParts.length - 1] || '').replace(/^Mishnah\s+/i, '').trim();
+    if (last && last !== 'mishnah') tractate = last;
+  } else if (mCorpus === 'tanakh') {
+    // tanakh_torah_genesis → sub = Torah, work = Genesis
+    if (mParts.length >= 3) {
+      subcorpus = mParts[1].charAt(0).toUpperCase() + mParts[1].slice(1);
+      tractate = mParts[mParts.length - 1].charAt(0).toUpperCase() + mParts[mParts.length - 1].slice(1);
+    }
+  } else if (mCorpus === 'talmud') {
+    const sederPart = mParts.find(p => p.startsWith('Seder '));
+    if (sederPart) subcorpus = sederPart;
+    const work = mParts.slice(1).filter(x => x !== 'bavli' && x !== 'yerushalmi' && !x.startsWith('Seder ')).join(' ').trim();
+    if (work) tractate = work;
+  } else if (mCorpus === 'liturgy') {
+    // liturgy_siddur or liturgy_haggadah — second part is the work/sub-corpus
+    if (mParts.length >= 2) {
+      const liturgyType = mParts[1];
+      // Capitalize for display
+      subcorpus = liturgyType.charAt(0).toUpperCase() + liturgyType.slice(1);
+    }
+  } else if (mCorpus === 'zohar') {
+    // Zohar's id is just "zohar" — granularity is in locs (e.g., "Idra Zuta:19:13", "Yitro:27:1").
+    // Extract the parashah/section name (the part before the first colon).
+    if (mLocs.length > 0) {
+      const firstLoc = mLocs[0];
+      const colonIdx = firstLoc.indexOf(':');
+      const section = colonIdx > 0 ? firstLoc.slice(0, colonIdx) : firstLoc;
+      if (section) subcorpus = section;
+    }
+  } else if (mCorpus === 'midrash') {
+    // Midrashic works appear with the work name as the id prefix
+    // (e.g., "Bereshit Rabbah", "Sifra", "Pirkei DeRabbi Eliezer"). Use it as the work.
+    if (mSrc) tractate = mSrc;
+  }
+
   return { corpus, subcorpus, tractate };
 }
 
