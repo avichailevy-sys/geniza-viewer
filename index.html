@@ -651,6 +651,9 @@ let corpusFilter = null;
 let filterContradiction = false;
 let filterEnrichment = false;
 let htrUrl = '';
+// HTR server box: hidden for the LP12 demo (no HTR server is connected yet).
+// TODO next version: connect an HTR server and set this back to true.
+const SHOW_HTR_BOX = false;
 
 // ── Disagreement detection helpers ────────────────────────────────────────
 function getDisagreementType(f) {
@@ -1091,12 +1094,12 @@ function showTranscription(f) {
         <div class="id-row"><span class="id-key">${k}</span><span class="id-val">${v}</span></div>
       `).join('')}
     </div>
-    <div class="htr-box">
+    ${SHOW_HTR_BOX ? `<div class="htr-box">
       <div class="id-grid-title">HTR Server (optional)</div>
       <div style="font-size:10px;color:#bbb;margin:4px 0">Use <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{ie}</code> and <code style="background:#f0f0ee;padding:1px 3px;border-radius:2px">{page}</code> as placeholders</div>
       <input type="text" id="htrInput" value="${htrUrl}" placeholder="https://your-server/{ie}/{page}" oninput="htrUrl=this.value">
       <button onclick="fetchHTR('${f.ie}','${f.page}')" id="htrBtn">Fetch</button>
-    </div>
+    </div>` : ''}
     <div id="txResult" style="margin-top:10px"></div>
   `;
 }
