@@ -12,14 +12,40 @@
 //                is chosen; every candidate is kept with the sources behind it.
 // Nothing is resolved silently: a contested level stays contested in the export.
 //
-// Depends on globals defined in index.html: frags, fgpData, normalizePassim,
-// normalizeFgp, normalizeKtiv, classifyFragmentStrict, corpusDisplay,
-// nliViewerUrl, nliImgUrl.
+// Building records depends on globals defined in index.html: frags, fgpData,
+// normalizePassim, normalizeFgp, normalizeKtiv, classifyFragmentStrict,
+// nliViewerUrl, nliImgUrl. The serializers (Turtle, JSON-LD, CSV) need only a
+// record, so the record pages under id/ use them with precomputed records.
 
 const GN_BASE = 'https://avichailevy-sys.github.io/geniza-viewer/';
 const GN_ID   = GN_BASE + 'id/';     // fragment URIs: id/<IE>/<page>
 const GN_NS   = GN_BASE + 'ns#';     // project terms
-const GN_VERSION = '0.1';
+const GN_VERSION = '0.2';
+
+// Corpus labels (same as CORPUS_LABEL in index.html, repeated here so the
+// record pages under id/ can use this file without the viewer).
+const GN_CORPUS_LABEL = {
+  tanakh: 'Tanakh', mishnah: 'Mishnah', talmud_bavli: 'Talmud Bavli',
+  talmud_yerushalmi: 'Jerusalem Talmud', talmud: 'Talmud', liturgy: 'Liturgy',
+  mishneh: 'Mishneh Torah', zohar: 'Zohar', midrash: 'Rabbinic / Midrash',
+};
+
+// Wikidata items for corpus-level values. Work-level values link to Sefaria.
+// Liturgy has no single matching Wikidata item, so it is left unlinked.
+const GN_WIKIDATA = {
+  tanakh: 'Q83367',            // Tanakh
+  mishnah: 'Q191825',          // Mishnah
+  talmud_bavli: 'Q28836835',   // Babylonian Talmud
+  talmud_yerushalmi: 'Q387422',// Jerusalem Talmud
+  talmud: 'Q43290',            // Talmud
+  mishneh: 'Q201029',          // Mishneh Torah
+  zohar: 'Q2888662',           // Zohar
+  midrash: 'Q202344',          // midrash
+};
+function gnWikidataUrl(corpusKey) {
+  const q = GN_WIKIDATA[corpusKey];
+  return q ? 'http://www.wikidata.org/entity/' + q : null;
+}
 
 const LEVELS = [
   { key: 'corpus',    label: 'Corpus',     term: 'CorpusLevel'    },
@@ -78,6 +104,8 @@ function unifiedRecord(f) {
     catalogueTitle: f.title || '',
     passimCoverage: f.coverage, passimCount: f.count,
     classification: (f.src === 'mishneh_torah') ? null : classifyFragmentStrict(f),
+    nliUrl: nliViewerUrl({ alma: f.alma }),
+    imgUrl: nliImgUrl({ ie: f.ie, page: pg }),
     claims, levels,
   };
 }
@@ -85,7 +113,7 @@ function unifiedRecord(f) {
 // Display value in English (corpus keys → labels)
 function gnDisplay(levelKey, v) {
   if (v === null || v === undefined) return null;
-  return levelKey === 'corpus' ? (corpusDisplay(v) || v) : v;
+  return levelKey === 'corpus' ? (GN_CORPUS_LABEL[v] || v) : v;
 }
 
 // Sefaria link for a work, where the naming pattern is reliable.
@@ -133,8 +161,8 @@ function recordToJsonLd(rec) {
     '@type': ['gn:Fragment', 'schema:ArchiveComponent'],
     label: (rec.shelfmark || 'Geniza fragment') + ', image ' + rec.page,
     nliIE: rec.ie, nliALMA: rec.alma, page: rec.page,
-    seeAlso: nliViewerUrl({ alma: rec.alma }),
-    image: nliImgUrl({ ie: rec.ie, page: rec.page }),
+    seeAlso: rec.nliUrl,
+    image: rec.imgUrl,
   };
   if (rec.shelfmark) node.shelfmark = rec.shelfmark;
   if (rec.library) node.heldBy = rec.library + (rec.city ? ', ' + rec.city : '');
@@ -155,6 +183,7 @@ function recordToJsonLd(rec) {
         value: gnDisplay(L.key, c.value),
         status: m.status,
         attributedTo: c.sources.map(s => GN_NS + 'source-' + s),
+        ...(L.key === 'corpus' && gnWikidataUrl(c.value) ? { about: gnWikidataUrl(c.value) } : {}),
       });
     });
   }
@@ -225,8 +254,8 @@ function recordToTurtle(rec) {
   if (rec.shelfmark) L1.push(`  schema:identifier ${ttlStr(rec.shelfmark)}`);
   if (rec.library) L1.push(`  schema:holdingArchive ${ttlStr(rec.library + (rec.city ? ', ' + rec.city : ''))}`);
   if (rec.catalogueTitle) L1.push(`  gn:catalogueTitle ${ttlStr(rec.catalogueTitle)}@he`);
-  L1.push(`  rdfs:seeAlso <${nliViewerUrl({ alma: rec.alma })}>`);
-  L1.push(`  schema:image <${nliImgUrl({ ie: rec.ie, page: rec.page })}>`);
+  L1.push(`  rdfs:seeAlso <${rec.nliUrl}>`);
+  L1.push(`  schema:image <${rec.imgUrl}>`);
   if (rec.passimCoverage) L1.push(`  gn:passimCoverage "${rec.passimCoverage}"^^xsd:decimal`);
   if (rec.classification) L1.push(`  gn:classification gn:${rec.classification}`);
   const sef = gnSefariaUrl(rec);
@@ -242,7 +271,8 @@ function recordToTurtle(rec) {
       idNodes.push(`${id} a gn:Identification ;
   gn:level gn:${L.term} ;
   gn:value ${ttlStr(gnDisplay(L.key, c.value))} ;
-  gn:status gn:${m.status} ;
+  gn:status gn:${m.status} ;${L.key === 'corpus' && gnWikidataUrl(c.value) ? `
+  schema:about <${gnWikidataUrl(c.value)}> ;` : ''}
   prov:wasAttributedTo ${c.sources.map(s => 'gn:source-' + s).join(', ')} .`);
     });
   }
@@ -340,9 +370,9 @@ function unifiedBlockHTML(rec, withActions = true) {
   const sef = gnSefariaUrl(rec);
   return `
     <div class="gn-unified">
-      <div class="gn-unified-title">🔗 Unified record <span class="gn-uri">${gnEsc(rec.uri)}</span></div>
+      <div class="gn-unified-title">🔗 Unified record <a class="gn-uri" href="${rec.uri}" target="_blank" rel="noreferrer">${gnEsc(rec.uri)}</a></div>
       <table class="compare-table gn-table"><tbody>${rows}</tbody></table>
-      ${sef ? `<div class="gn-link">Linked work: <a href="${sef}" target="_blank" rel="noreferrer">${sef}</a></div>` : ''}
+      ${gnLinksHTML(rec)}
       ${withActions ? `<div class="gn-actions">
         <button class="compare-example-btn" onclick="toggleLodPreview('ttl')">Show as Turtle</button>
         <button class="compare-example-btn" onclick="toggleLodPreview('jsonld')">Show as JSON-LD</button>
@@ -351,6 +381,18 @@ function unifiedBlockHTML(rec, withActions = true) {
       </div>
       <pre id="gn-preview" class="gn-preview" style="display:none"></pre>` : ''}
     </div>`;
+}
+
+// Outgoing links: Wikidata (corpus level) and Sefaria (work level).
+function gnLinksHTML(rec) {
+  const out = [];
+  rec.levels.corpus.candidates.forEach(c => {
+    const wd = gnWikidataUrl(c.value);
+    if (wd) out.push(`Corpus “${gnEsc(gnDisplay('corpus', c.value))}” on Wikidata: <a href="${wd.replace('http://www.wikidata.org/entity/', 'https://www.wikidata.org/wiki/')}" target="_blank" rel="noreferrer">${wd.split('/').pop()}</a>`);
+  });
+  const sef = gnSefariaUrl(rec);
+  if (sef) out.push(`Work on Sefaria: <a href="${sef}" target="_blank" rel="noreferrer">${gnEsc(sef.replace('https://www.sefaria.org/', ''))}</a>`);
+  return out.length ? `<div class="gn-link">${out.join(' · ')}</div>` : '';
 }
 
 let gnPreviewFmt = null;
@@ -368,6 +410,7 @@ function toggleLodPreview(fmt) {
 
 // Append the unified block to the existing comparison modal.
 (function hookCompareModal() {
+  if (typeof frags === 'undefined') return;
   const orig = window.openCompareModal;
   if (typeof orig !== 'function') return;
   window.openCompareModal = function () {
@@ -416,7 +459,13 @@ function openUnifiedModal() {
         <button class="compare-example-btn" onclick="downloadCatalogue('csv')">⬇ Table · CSV</button>
       </div>
       <div class="gn-export">
-        <div class="compare-examples-label">Walk through an example</div>
+        <div class="compare-examples-label">Addresses and links</div>
+        <a class="compare-example-btn" href="examples.html" target="_blank">📘 Worked examples (English)</a>
+        <a class="compare-example-btn" href="${GN_ID}catalogue" target="_blank">Catalogue page</a>
+        <a class="compare-example-btn" href="${GN_BASE}ns" target="_blank">Vocabulary</a>
+      </div>
+      <div class="gn-export">
+        <div class="compare-examples-label">Walk through a random example</div>
         <button class="compare-example-btn" onclick="showDemoExample('enrich')">🟡 Sources complete each other</button>
         <button class="compare-example-btn" onclick="showDemoExample('contest')">🔴 Sources disagree</button>
         <button class="compare-example-btn" onclick="showDemoExample('confirm')">🟢 Sources agree</button>
@@ -463,7 +512,8 @@ function showDemoExample(kind) {
   }).join('');
   out.innerHTML = `
     <div class="gn-step"><b>1 · The fragment.</b> ${gnEsc(r.shelfmark)}${r.library ? ', ' + gnEsc(r.library) : ''} · NLI IE ${r.ie}, image ${r.page}
-      · <a href="${nliViewerUrl({ alma: r.alma })}" target="_blank" rel="noreferrer">NLI record</a>
+      · <a href="${r.nliUrl}" target="_blank" rel="noreferrer">NLI record</a>
+      · <a href="${r.uri}" target="_blank" rel="noreferrer">record page</a>
       · <a href="#" onclick="closeUnifiedModal(true); jumpToExample('${r.ie}', ${r.page}); return false;">open in viewer</a></div>
     <div class="gn-step"><b>2 · What each source says</b> (normalized to English)</div>
     <table class="compare-table gn-table"><thead><tr><th class="field-col">Source</th><th>Corpus</th><th>Sub-corpus</th><th>Work</th></tr></thead><tbody>${srcRows}</tbody></table>
@@ -476,9 +526,25 @@ function showDemoExample(kind) {
 // Enable the button only once all three sources are loaded, so the
 // catalogue is never built from partial data.
 (function enableWhenReady() {
+  if (typeof frags === 'undefined') return; // record pages under id/ have no viewer
   const t = setInterval(() => {
     const ready = frags.length > 0 && vdLoaded && Object.keys(fgpData).length > 0;
     const b = document.getElementById('unifiedBtn');
     if (ready && b) { b.disabled = false; clearInterval(t); }
   }, 1000);
+})();
+
+// Open a fragment from the address bar: index.html?ie=<IE>&page=<page>
+// (used by the "open in viewer" links on the record pages).
+(function deepLink() {
+  if (typeof frags === 'undefined') return;
+  const q = new URLSearchParams(location.search);
+  const ie = q.get('ie'), pg = parseInt(q.get('page'), 10);
+  if (!ie || !pg) return;
+  const t = setInterval(() => {
+    if (frags.length > 0 && vdLoaded && Object.keys(fgpData).length > 0) {
+      clearInterval(t);
+      jumpToExample(ie, pg);
+    }
+  }, 500);
 })();

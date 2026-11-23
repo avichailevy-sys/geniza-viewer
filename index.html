@@ -313,6 +313,9 @@
   }
 
   /* Unified catalogue + Linked Data */
+  a.compare-example-btn { text-decoration:none; display:inline-block; }
+  #examplesLink { font-size:11px; padding:4px 10px; border:1px solid #ddd; border-radius:4px; background:#fff; color:#555; text-decoration:none; margin-right:8px; }
+  #examplesLink:hover { background:#f4f8fc; border-color:#1F5C99; color:#1F5C99; }
   #unifiedBtn { font-size:11px; padding:4px 10px; border:1px solid #ddd; border-radius:4px; background:#fff; color:#555; cursor:pointer; margin-right:8px; }
   #unifiedBtn:hover { background:#f4f8fc; border-color:#1F5C99; color:#1F5C99; }
   #unifiedBtn:disabled { color:#ccc; cursor:not-allowed; background:#f8f8f8; }
@@ -354,6 +357,7 @@
     <span class="sample-badge" id="sampleBadge">SAMPLE DATA</span>
     <span class="rec-count" id="recCount">0 records</span>
     <div class="spacer"></div>
+    <a id="examplesLink" href="examples.html" target="_blank" title="Worked examples in English">📘 Examples</a>
     <button id="unifiedBtn" onclick="openUnifiedModal()" disabled title="Unified catalogue and Linked Data export">
       🔗 <span>Unified Catalogue &amp; Linked Data</span>
     </button>

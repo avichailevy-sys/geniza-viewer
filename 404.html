@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GenizaNexus Record</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  // GitHub Pages serves this page for every address that has no file of its own.
+  // It answers three kinds of address:
+  //   id/<IE>/<page>   one fragment's unified record  (add ?format=ttl or ?format=jsonld for raw data)
+  //   id/catalogue     the dataset as a whole
+  //   ns               the project's terms (every gn: term points here, e.g. ns#Fragment)
+  window.GN_ROOT = location.pathname.startsWith('/geniza-viewer/') ? '/geniza-viewer/' : '/';
+  document.write('<link rel="stylesheet" href="' + GN_ROOT + 'site.css">');
+  document.write('<script src="' + GN_ROOT + 'unified.js"><\/script>');
+  document.write('<script src="' + GN_ROOT + 'records-ui.js"><\/script>');
+</script>
+</head>
+<body>
+<div class="wrap" id="app"><p class="sub">Loading…</p></div>
+<script>
+(function () {
+  const app = document.getElementById('app');
+  const rel = location.pathname.slice(GN_ROOT.length).replace(/\/+$/, '');
+  const fmt = new URLSearchParams(location.search).get('format');
+  let m;
+
+  function page(html) { app.innerHTML = topNavHTML() + html; }
+
+  if ((m = rel.match(/^id\/(\d+)\/(\d+)$/))) {
+    const ie = m[1], pg = parseInt(m[2], 10);
+    const shard = ie.slice(-2).padStart(2, '0');
+    fetch(GN_ROOT + 'id-data/' + shard + '.json')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        const rec = data[ie + '/' + pg];
+        if (!rec) {
+          document.title = 'Fragment not found';
+          return page(`<h1>No record for IE ${ie}, image ${pg}</h1><p class="sub">This address follows the GenizaNexus pattern, but the catalogue has no fragment with this NLI IE number and image number.</p>`);
+        }
+        if (fmt === 'ttl' || fmt === 'jsonld') {
+          const text = fmt === 'ttl' ? ttlHeader() + '\n' + recordToTurtle(rec) : JSON.stringify(recordsToJsonLdDoc([rec]), null, 2);
+          document.body.innerHTML = '<pre style="margin:0;padding:16px;white-space:pre-wrap;font:12px/1.5 JetBrains Mono,monospace"></pre>';
+          document.body.firstChild.textContent = text;
+          return;
+        }
+        document.title = (rec.shelfmark || 'Fragment') + ', image ' + rec.page;
+        page(`
+          <h1>${gnEsc(rec.shelfmark || 'Geniza fragment')}, image ${rec.page}</h1>
+          <p class="sub">Unified identification record. Every value is kept with the sources that give it; where the sources disagree, no value is chosen.</p>
+          ${recordCardHTML(rec, { heading: 'Record', linkUri: false })}
+          <p class="sub">The same record as raw data: <a href="?format=ttl">Turtle</a> · <a href="?format=jsonld">JSON-LD</a></p>`);
+      })
+      .catch(e => page(`<h1>Could not load the record</h1><p class="sub">${gnEsc(e.message)}</p>`));
+    return;
+  }
+
+  if (rel === 'id/catalogue' || rel === 'id') {
+    document.title = 'GenizaNexus Catalogue';
+    return page(`
+      <h1>GenizaNexus unified identification catalogue</h1>
+      <p class="sub">Version ${GN_VERSION} · <span class="uri">${GN_BASE}id/catalogue</span></p>
+      <div class="card">
+        <p style="margin-top:0">One record for each of <b>68,989</b> Cairo Geniza fragment images, merging three independent identifications:</p>
+        <ul>
+          <li><b>passim</b>: computational text-reuse alignment against Sefaria (David Smith, Northeastern University)</li>
+          <li><b>FGP</b>: Friedberg Geniza Project domain classification</li>
+          <li><b>NLI/KTIV</b>: the National Library of Israel catalogue record</li>
+        </ul>
+        <p>At each level (corpus, sub-corpus, work) a record keeps every value and the sources behind it, with a status: confirmed (3 sources), supported (2), single source, or contested. Contested levels are not resolved.</p>
+        <p>Each fragment has a stable address built on its NLI IE number and image number:<br><span class="uri">${GN_BASE}id/&lt;IE&gt;/&lt;image&gt;</span>, for example <a class="uri" href="${GN_BASE}id/36762586/7">${GN_BASE}id/36762586/7</a></p>
+        <p>Outgoing links: corpus values link to Wikidata, work values link to Sefaria, and every record links to its NLI catalogue record and image.</p>
+        <p style="margin-bottom:0">Method and findings: <a href="https://doi.org/10.5281/zenodo.21810900">doi.org/10.5281/zenodo.21810900</a></p>
+      </div>
+      <h2>Get the data</h2>
+      <ul>
+        <li>One record: add <code>?format=ttl</code> or <code>?format=jsonld</code> to its address.</li>
+        <li>The whole catalogue (Turtle, JSON-LD or CSV): use <b>Unified Catalogue &amp; Linked Data</b> in the <a href="${GN_BASE}">viewer</a>.</li>
+        <li>Worked examples in English: <a href="${GN_BASE}examples.html">examples page</a>.</li>
+      </ul>`);
+  }
+
+  if (rel === 'ns') {
+    document.title = 'GenizaNexus Vocabulary';
+    const T = (t, d) => `<dt id="${t}">gn:${t}</dt><dd>${d}</dd>`;
+    page(`
+      <h1>GenizaNexus vocabulary</h1>
+      <p class="sub">The terms used in the GenizaNexus Linked Data, at <span class="uri">${GN_NS}</span>. Other terms come from schema.org, PROV (provenance), Dublin Core and RDFS.</p>
+      <div class="card"><h3>Kinds of thing</h3><dl class="terms">
+        ${T('Fragment', 'One image of a Cairo Geniza fragment, identified by its NLI IE number and image number.')}
+        ${T('Identification', 'One claim about a fragment at one level (corpus, sub-corpus or work), with its value, its status and the sources that make it.')}
+        ${T('CorpusLevel', 'Level of an identification: the corpus, e.g. Mishnah, Talmud Bavli, Tanakh.')}
+        ${T('SubCorpusLevel', 'Level of an identification: a division of the corpus, e.g. Seder Moed, Prophets.')}
+        ${T('WorkLevel', 'Level of an identification: the work, e.g. a tractate or a biblical book.')}
+      </dl></div>
+      <div class="card"><h3>Status of a level</h3><dl class="terms">
+        ${T('confirmed', 'All three sources give the same value.')}
+        ${T('supported', 'Two sources give the same value; the third is silent.')}
+        ${T('single', 'Only one source gives a value.')}
+        ${T('contested', 'Sources give different values. No value is chosen; every claim is kept with its sources.')}
+      </dl></div>
+      <div class="card"><h3>Fragment classification</h3><dl class="terms">
+        ${T('agreement', 'All sources speak at the same levels and agree.')}
+        ${T('enrichment', 'No disagreement, and at least one source adds detail the others lack.')}
+        ${T('contradiction', 'At least one level where sources give different values.')}
+      </dl></div>
+      <div class="card"><h3>Properties</h3><dl class="terms">
+        ${T('hasIdentification', 'Links a fragment to each of its identifications.')}
+        ${T('level', 'The level of an identification.')}
+        ${T('value', 'The value an identification gives, in English.')}
+        ${T('status', 'The status of the level the identification belongs to.')}
+        ${T('unifiedCorpus', 'The fragment\'s corpus, when it is not contested.')}
+        ${T('unifiedSubCorpus', 'The fragment\'s sub-corpus, when it is not contested.')}
+        ${T('unifiedWork', 'The fragment\'s work, when it is not contested.')}
+        ${T('classification', 'agreement, enrichment or contradiction.')}
+        ${T('nliIE', 'The NLI IE number (digital object identifier at the National Library of Israel).')}
+        ${T('nliALMA', 'The NLI ALMA number (catalogue record identifier).')}
+        ${T('page', 'The image number within the NLI digital object.')}
+        ${T('catalogueTitle', 'The title in the NLI catalogue record, in Hebrew.')}
+        ${T('passimCoverage', 'Share of the fragment\'s text that passim aligned to the matched work (0 to 1).')}
+      </dl></div>
+      <div class="card"><h3>Sources</h3><dl class="terms">
+        ${T('source-passim', SOURCES.passim.desc + '.')}
+        ${T('source-fgp', SOURCES.fgp.desc + '.')}
+        ${T('source-ktiv', SOURCES.ktiv.desc + '.')}
+      </dl></div>`);
+    const h = location.hash.slice(1);
+    if (h && document.getElementById(h)) { const el = document.getElementById(h); el.scrollIntoView(); el.style.background = 'var(--accent-soft)'; }
+    return;
+  }
+
+  document.title = 'Page not found';
+  page(`<h1>Page not found</h1><p class="sub">There is nothing at this address. Try the <a href="${GN_BASE}">viewer</a>, the <a href="${GN_BASE}examples.html">examples</a> or the <a href="${GN_BASE}id/catalogue">catalogue</a>.</p>`);
+})();
+</script>
+</body>
+</html>
