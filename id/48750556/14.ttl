@@ -1,0 +1,36 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48750556/14> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II A 317/02, image 14" ;
+  gn:nliIE "48750556" ;
+  gn:nliALMA "990000851710205171" ;
+  gn:page 14 ;
+  schema:identifier "Ms. EVR II A 317/02" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "זהר (ספר דברים\t פרשת ואתחנן)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990000851710205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/48750556!14/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.626666667"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Zohar" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/48750556/14#corpus-1> ;
+  gn:unifiedSubCorpus "Vaetchanan" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/48750556/14#subcorpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48750556/14#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Zohar" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q2888662> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48750556/14#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Vaetchanan" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

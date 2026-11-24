@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/64468101/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Or. 9772C, image 2" ;
+  gn:nliIE "64468101" ;
+  gn:nliALMA "990001235240205171" ;
+  gn:page 2 ;
+  schema:identifier "Or. 9772C" ;
+  schema:holdingArchive "The British Library, London" ;
+  gn:catalogueTitle "הגדה של פסח (קטעים)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001235240205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/64468101!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.84"^^xsd:decimal ;
+  gn:classification gn:enrichment .

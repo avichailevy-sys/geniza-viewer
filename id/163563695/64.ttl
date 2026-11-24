@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/163563695/64> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. V B, image 64" ;
+  gn:nliIE "163563695" ;
+  gn:nliALMA "990001508190205171" ;
+  gn:page 64 ;
+  schema:identifier "Ms. V B" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "קבץ קטעי גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001508190205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/163563695!64/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.740740741"^^xsd:decimal ;
+  gn:classification gn:enrichment .

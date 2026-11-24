@@ -1,0 +1,36 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/212524272/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. III A 71, image 1" ;
+  gn:nliIE "212524272" ;
+  gn:nliALMA "990001505640205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. III A 71" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "משנה סדר נזיקין (אבות ג:י-ה:ב)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001505640205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/212524272!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.711538462"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/212524272/1#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Nezikin" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/212524272/1#subcorpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/212524272/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-fgp, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/212524272/1#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Nezikin" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-ktiv .

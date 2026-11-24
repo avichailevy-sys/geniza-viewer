@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167788738/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S AS 192.150, image 1" ;
+  gn:nliIE "167788738" ;
+  gn:nliALMA "990052315270205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. T-S AS 192.150" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "מדרשי אגדה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990052315270205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/167788738!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.571428571"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Rabbinic / Midrash" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/167788738/1#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167788738/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Rabbinic / Midrash" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q202344> ;
+  prov:wasAttributedTo gn:source-fgp, gn:source-ktiv .

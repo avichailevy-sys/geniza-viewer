@@ -1,0 +1,27 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49314438/88> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II A 2947, image 88" ;
+  gn:nliIE "49314438" ;
+  gn:nliALMA "990001464930205171" ;
+  gn:page 88 ;
+  schema:identifier "Ms. EVR II A 2947" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "סדור מנהג קראים (קטעים)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001464930205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/49314438!88/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.515151515"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Liturgy" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49314438/88#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49314438/88#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-fgp .

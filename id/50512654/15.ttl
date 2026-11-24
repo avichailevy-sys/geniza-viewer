@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/50512654/15> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II C 42, image 15" ;
+  gn:nliIE "50512654" ;
+  gn:nliALMA "990001583920205171" ;
+  gn:page 15 ;
+  schema:identifier "Ms. EVR II C 42" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תורה (שמות\t קטע)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001583920205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/50512654!15/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.870967742"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Exodus> ;
+  gn:unifiedCorpus "Tanakh" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/50512654/15#corpus-1> ;
+  gn:unifiedSubCorpus "Torah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/50512654/15#subcorpus-1> ;
+  gn:unifiedWork "Exodus" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/50512654/15#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/50512654/15#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/50512654/15#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Torah" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/50512654/15#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Exodus" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

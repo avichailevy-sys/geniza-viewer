@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/169338767/4> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Heb. 577.4.47=4, image 4" ;
+  gn:nliIE "169338767" ;
+  gn:nliALMA "990024993500205171" ;
+  gn:page 4 ;
+  schema:identifier "Ms. Heb. 577.4.47=4" ;
+  schema:holdingArchive "The National Library of Israel, Jerusalem" ;
+  gn:catalogueTitle "שאילתות (ויחל-צו) :"@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990024993500205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/169338767!4/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.551724138"^^xsd:decimal ;
+  gn:classification gn:enrichment .

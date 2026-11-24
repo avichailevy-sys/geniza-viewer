@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/160222472/3> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Kaufmann GEN 204.4, image 3" ;
+  gn:nliIE "160222472" ;
+  gn:nliALMA "990053938300205171" ;
+  gn:page 3 ;
+  schema:identifier "Ms. Kaufmann GEN 204.4" ;
+  schema:holdingArchive "Library of the Hungarian Academy of Sciences, Budapest" ;
+  gn:catalogueTitle "קטע גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053938300205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/160222472!3/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.642857143"^^xsd:decimal ;
+  gn:classification gn:enrichment .

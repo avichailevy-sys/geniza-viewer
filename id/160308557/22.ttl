@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/160308557/22> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Kaufmann GEN 386, image 22" ;
+  gn:nliIE "160308557" ;
+  gn:nliALMA "990001962290205171" ;
+  gn:page 22 ;
+  schema:identifier "Ms. Kaufmann GEN 386" ;
+  schema:holdingArchive "Library of the Hungarian Academy of Sciences, Budapest" ;
+  gn:catalogueTitle "תרגום ערבי לתורה לרס\"ג (שמות כט:כח-לו:כו)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001962290205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/160308557!22/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.705882353"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Tanakh" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/160308557/22#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/160308557/22#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-fgp .

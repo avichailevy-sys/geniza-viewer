@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/166218227/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S Ar. 22.5, image 1" ;
+  gn:nliIE "166218227" ;
+  gn:nliALMA "990051266400205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. T-S Ar. 22.5" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "תפסיר רס\"ג."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990051266400205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/166218227!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.933333333"^^xsd:decimal ;
+  gn:classification gn:enrichment .

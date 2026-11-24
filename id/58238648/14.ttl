@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/58238648/14> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR ARAB I 3328, image 14" ;
+  gn:nliIE "58238648" ;
+  gn:nliALMA "990001550930205171" ;
+  gn:page 14 ;
+  schema:identifier "Ms. EVR ARAB I 3328" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תרגום ערבי לתורה (שמות)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001550930205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/58238648!14/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.6875"^^xsd:decimal ;
+  gn:classification gn:enrichment .

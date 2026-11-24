@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/169471147/4> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S NS 295.186, image 4" ;
+  gn:nliIE "169471147" ;
+  gn:nliALMA "990051683540205171" ;
+  gn:page 4 ;
+  schema:identifier "Ms. T-S NS 295.186" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "קטע גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990051683540205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/169471147!4/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.6"^^xsd:decimal ;
+  gn:classification gn:enrichment .

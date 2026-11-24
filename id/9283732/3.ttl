@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/9283732/3> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Heb. 577.4.20=4, image 3" ;
+  gn:nliIE "9283732" ;
+  gn:nliALMA "990024958260205171" ;
+  gn:page 3 ;
+  schema:identifier "Ms. Heb. 577.4.20=4" ;
+  schema:holdingArchive "The National Library of Israel, Jerusalem" ;
+  gn:catalogueTitle "משנה סדר טהרות (אהלות ח:ב-ט:ג\\ יח:ב-נגעים א:א)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990024958260205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/9283732!3/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.637681159"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Mishnah_Oholot> ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/9283732/3#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Tahorot" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/9283732/3#subcorpus-1> ;
+  gn:unifiedWork "Oholot" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/9283732/3#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/9283732/3#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:confirmed ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/9283732/3#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Tahorot" ;
+  gn:status gn:supported ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/9283732/3#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Oholot" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

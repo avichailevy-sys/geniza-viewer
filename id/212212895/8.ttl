@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/212212895/8> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Or. 10819, image 8" ;
+  gn:nliIE "212212895" ;
+  gn:nliALMA "990001256450205171" ;
+  gn:page 8 ;
+  schema:identifier "Or. 10819" ;
+  schema:holdingArchive "The British Library, London" ;
+  gn:catalogueTitle "פרוש המשנה לרמב\"ם בערבית (כתובות ז:ו-ח:ח; ט:ו-י:ד) :"@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001256450205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/212212895!8/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.541666667"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/212212895/8#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/212212895/8#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-ktiv .

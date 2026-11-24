@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/157243086/14> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "L 600, image 14" ;
+  gn:nliIE "157243086" ;
+  gn:nliALMA "990001021390205171" ;
+  gn:page 14 ;
+  schema:identifier "L 600" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "תנ\"ך (קטעים) :"@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001021390205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/157243086!14/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.666666667"^^xsd:decimal ;
+  gn:classification gn:enrichment .

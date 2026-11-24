@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/161511530/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. V B 31, image 1" ;
+  gn:nliIE "161511530" ;
+  gn:nliALMA "990047792140205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. V B 31" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "תרגום ערבי לתורה לרס\"ג (בראשית מט:יד-מט:כט)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990047792140205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/161511530!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.833333333"^^xsd:decimal ;
+  gn:classification gn:enrichment .

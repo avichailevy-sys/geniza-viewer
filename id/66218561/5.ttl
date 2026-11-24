@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/66218561/5> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Or. 12344, image 5" ;
+  gn:nliIE "66218561" ;
+  gn:nliALMA "990001260070205171" ;
+  gn:page 5 ;
+  schema:identifier "Or. 12344" ;
+  schema:holdingArchive "The British Library, London" ;
+  gn:catalogueTitle "קטעי גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001260070205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/66218561!5/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.6875"^^xsd:decimal ;
+  gn:classification gn:enrichment .

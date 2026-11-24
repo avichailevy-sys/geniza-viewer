@@ -8,9 +8,9 @@
 <script>
   // GitHub Pages serves this page for every address that has no file of its own.
   // It answers three kinds of address:
-  //   id/<IE>/<page>   one fragment's unified record  (add ?format=ttl or ?format=jsonld for raw data)
-  //   id/catalogue     the dataset as a whole
-  //   ns               the project's terms (every gn: term points here, e.g. ns#Fragment)
+  // Fragment records have their own files (id/<IE>/<page>/index.html and id/<IE>/<page>.ttl).
+  // This same file also serves id/catalogue/index.html and ns/index.html (chosen by the
+  // address), and tells the reader when a fragment address has no record.
   window.GN_ROOT = location.pathname.startsWith('/geniza-viewer/') ? '/geniza-viewer/' : '/';
   document.write('<link rel="stylesheet" href="' + GN_ROOT + 'site.css">');
   document.write('<script src="' + GN_ROOT + 'unified.js"><\/script>');
@@ -29,31 +29,10 @@
   function page(html) { app.innerHTML = topNavHTML() + html; }
 
   if ((m = rel.match(/^id\/(\d+)\/(\d+)$/))) {
-    const ie = m[1], pg = parseInt(m[2], 10);
-    const shard = ie.slice(-2).padStart(2, '0');
-    fetch(GN_ROOT + 'id-data/' + shard + '.json')
-      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(data => {
-        const rec = data[ie + '/' + pg];
-        if (!rec) {
-          document.title = 'Fragment not found';
-          return page(`<h1>No record for IE ${ie}, image ${pg}</h1><p class="sub">This address follows the GenizaNexus pattern, but the catalogue has no fragment with this NLI IE number and image number.</p>`);
-        }
-        if (fmt === 'ttl' || fmt === 'jsonld') {
-          const text = fmt === 'ttl' ? ttlHeader() + '\n' + recordToTurtle(rec) : JSON.stringify(recordsToJsonLdDoc([rec]), null, 2);
-          document.body.innerHTML = '<pre style="margin:0;padding:16px;white-space:pre-wrap;font:12px/1.5 JetBrains Mono,monospace"></pre>';
-          document.body.firstChild.textContent = text;
-          return;
-        }
-        document.title = (rec.shelfmark || 'Fragment') + ', image ' + rec.page;
-        page(`
-          <h1>${gnEsc(rec.shelfmark || 'Geniza fragment')}, image ${rec.page}</h1>
-          <p class="sub">Unified identification record. Every value is kept with the sources that give it; where the sources disagree, no value is chosen.</p>
-          ${recordCardHTML(rec, { heading: 'Record', linkUri: false })}
-          <p class="sub">The same record as raw data: <a href="?format=ttl">Turtle</a> · <a href="?format=jsonld">JSON-LD</a></p>`);
-      })
-      .catch(e => page(`<h1>Could not load the record</h1><p class="sub">${gnEsc(e.message)}</p>`));
-    return;
+    // Every catalogued fragment has its own page at id/<IE>/<page>/, so reaching
+    // this fallback means the catalogue has no such fragment.
+    document.title = 'Fragment not found';
+    return page(`<h1>No record for IE ${m[1]}, image ${m[2]}</h1><p class="sub">This address follows the GenizaNexus pattern, but the catalogue has no fragment with this NLI IE number and image number.</p>`);
   }
 
   if (rel === 'id/catalogue' || rel === 'id') {
@@ -75,7 +54,7 @@
       </div>
       <h2>Get the data</h2>
       <ul>
-        <li>One record: add <code>?format=ttl</code> or <code>?format=jsonld</code> to its address.</li>
+        <li>One record as Turtle: add <code>.ttl</code> to its address, for example <a class="uri" href="${GN_BASE}id/36762586/7.ttl">${GN_BASE}id/36762586/7.ttl</a></li>
         <li>The whole catalogue (Turtle, JSON-LD or CSV): use <b>Unified Catalogue &amp; Linked Data</b> in the <a href="${GN_BASE}">viewer</a>.</li>
         <li>Worked examples in English: <a href="${GN_BASE}examples.html">examples page</a>.</li>
       </ul>`);

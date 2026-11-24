@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/45527703/76> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR ARAB I 2134, image 76" ;
+  gn:nliIE "45527703" ;
+  gn:nliALMA "990000906370205171" ;
+  gn:page 76 ;
+  schema:identifier "Ms. EVR ARAB I 2134" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תפסיר תורה צוה לנו."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990000906370205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/45527703!76/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.516129032"^^xsd:decimal ;
+  gn:classification gn:enrichment .

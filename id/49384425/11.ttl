@@ -1,0 +1,27 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49384425/11> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II A 2152, image 11" ;
+  gn:nliIE "49384425" ;
+  gn:nliALMA "990001456600205171" ;
+  gn:page 11 ;
+  schema:identifier "Ms. EVR II A 2152" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "פיוטים כמנהג קראים ליום כפור."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001456600205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/49384425!11/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.666666667"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Liturgy" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49384425/11#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49384425/11#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-ktiv .

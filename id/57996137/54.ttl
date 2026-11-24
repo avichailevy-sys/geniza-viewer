@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/57996137/54> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR ARAB II 796, image 54" ;
+  gn:nliIE "57996137" ;
+  gn:nliALMA "990001600640205171" ;
+  gn:page 54 ;
+  schema:identifier "Ms. EVR ARAB II 796" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "קטעי פרשנות מכתבי-יד שונים."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001600640205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/57996137!54/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.694444444"^^xsd:decimal ;
+  gn:classification gn:enrichment .

@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/69593807/161> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Gaster 82, image 161" ;
+  gn:nliIE "69593807" ;
+  gn:nliALMA "990001835240205171" ;
+  gn:page 161 ;
+  schema:identifier "Ms. Gaster 82" ;
+  schema:holdingArchive "The University of Manchester Library, Manchester" ;
+  gn:catalogueTitle "מעשיות."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001835240205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/69593807!161/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.511627907"^^xsd:decimal ;
+  gn:classification gn:enrichment .

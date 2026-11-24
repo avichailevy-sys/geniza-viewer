@@ -1,0 +1,37 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/208635860/5> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. 9018, image 5" ;
+  gn:nliIE "208635860" ;
+  gn:nliALMA "990001142760205171" ;
+  gn:page 5 ;
+  schema:identifier "Ms. 9018" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "ספרא (קטע) :"@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001142760205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/208635860!5/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.75"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Sifra> ;
+  gn:unifiedCorpus "Rabbinic / Midrash" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/208635860/5#corpus-1> ;
+  gn:unifiedWork "Sifra" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/208635860/5#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/208635860/5#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Rabbinic / Midrash" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q202344> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/208635860/5#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Sifra" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

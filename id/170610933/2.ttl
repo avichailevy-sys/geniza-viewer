@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/170610933/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Gaster Printed series 198, image 2" ;
+  gn:nliIE "170610933" ;
+  gn:nliALMA "990053781240205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. Gaster Printed series 198" ;
+  schema:holdingArchive "The University of Manchester Library, Manchester" ;
+  gn:catalogueTitle "קטע גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053781240205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/170610933!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.578947368"^^xsd:decimal ;
+  gn:classification gn:enrichment .

@@ -1,0 +1,35 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202920941/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. ENA 696.6, image 1" ;
+  gn:nliIE "202920941" ;
+  gn:nliALMA "990053054830205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. ENA 696.6" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "פיוט;תוספות של סידור;תפילה וברכות."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053054830205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/202920941!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.523809524"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Liturgy" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/202920941/1#corpus-1> ;
+  gn:unifiedSubCorpus "Haggadah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/202920941/1#subcorpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202920941/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:supported ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202920941/1#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Haggadah" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

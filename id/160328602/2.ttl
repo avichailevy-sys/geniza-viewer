@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/160328602/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Kaufmann GEN 437, image 2" ;
+  gn:nliIE "160328602" ;
+  gn:nliALMA "990001962800205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. Kaufmann GEN 437" ;
+  schema:holdingArchive "Library of the Hungarian Academy of Sciences, Budapest" ;
+  gn:catalogueTitle "הלכות הרי\"ף (ברכות\t קטע)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001962800205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/160328602!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.736842105"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Rabbinic / Midrash" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/160328602/2#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/160328602/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Rabbinic / Midrash" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q202344> ;
+  prov:wasAttributedTo gn:source-ktiv .

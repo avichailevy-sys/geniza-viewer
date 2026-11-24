@@ -1,0 +1,35 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202007427/7> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Rainer Collection H 105, image 7" ;
+  gn:nliIE "202007427" ;
+  gn:nliALMA "990001696860205171" ;
+  gn:page 7 ;
+  schema:identifier "Rainer Collection H 105" ;
+  schema:holdingArchive "Austrian National Library, Vienna" ;
+  gn:catalogueTitle "שפעת רביבים יוריד בזבולין."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001696860205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/202007427!7/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.666666667"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Liturgy" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/202007427/7#corpus-1> ;
+  gn:unifiedSubCorpus "Siddur" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/202007427/7#subcorpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202007427/7#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202007427/7#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Siddur" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/47496430/35> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR ARAB I 4800, image 35" ;
+  gn:nliIE "47496430" ;
+  gn:nliALMA "990001564750205171" ;
+  gn:page 35 ;
+  schema:identifier "Ms. EVR ARAB I 4800" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תרגום ופרוש התורה ליפת בן עלי (ויקרא ה-י)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001564750205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/47496430!35/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.514285714"^^xsd:decimal ;
+  gn:classification gn:enrichment .

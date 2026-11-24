@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/169377011/3> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Heb. 5700=8, image 3" ;
+  gn:nliIE "169377011" ;
+  gn:nliALMA "990000432020205171" ;
+  gn:page 3 ;
+  schema:identifier "Ms. Heb. 5700=8" ;
+  schema:holdingArchive "The National Library of Israel, Jerusalem" ;
+  gn:catalogueTitle "מעשיות מן התלמוד :"@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990000432020205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/169377011!3/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.823529412"^^xsd:decimal ;
+  gn:classification gn:enrichment .

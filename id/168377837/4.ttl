@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/168377837/4> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. I C 29, image 4" ;
+  gn:nliIE "168377837" ;
+  gn:nliALMA "990053840620205171" ;
+  gn:page 4 ;
+  schema:identifier "Ms. I C 29" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "תרגום ערבי לתורה לרס\"ג (ויקרא כז:כו-במדבר ג:לב)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053840620205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/168377837!4/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.705882353"^^xsd:decimal ;
+  gn:classification gn:enrichment .

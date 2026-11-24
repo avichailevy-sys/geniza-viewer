@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/168378096/3> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. I C 33, image 3" ;
+  gn:nliIE "168378096" ;
+  gn:nliALMA "990053840660205171" ;
+  gn:page 3 ;
+  schema:identifier "Ms. I C 33" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "תרגום ערבי לתורה לרס\"ג (דברים ב:לב-ג:יח; ה:כב-ו:יז)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053840660205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/168378096!3/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.863636364"^^xsd:decimal ;
+  gn:classification gn:enrichment .

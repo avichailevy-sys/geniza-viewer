@@ -1,0 +1,43 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/155335570/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. ENA 2416.28, image 1" ;
+  gn:nliIE "155335570" ;
+  gn:nliALMA "990053163890205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. ENA 2416.28" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "קבלה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053163890205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/155335570!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.590909091"^^xsd:decimal ;
+  gn:classification gn:contradiction ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/155335570/1#corpus-1> ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/155335570/1#corpus-2> ;
+  gn:unifiedWork "Yalkut Shimoni on Torah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/155335570/1#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/155335570/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Rabbinic / Midrash" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q202344> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/155335570/1#corpus-2> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Zohar" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q2888662> ;
+  prov:wasAttributedTo gn:source-fgp .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/155335570/1#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Yalkut Shimoni on Torah" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

@@ -1,0 +1,36 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/170045489/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. VI 188.2, image 2" ;
+  gn:nliIE "170045489" ;
+  gn:nliALMA "990002046880205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. VI 188.2" ;
+  schema:holdingArchive "Mosseri ·  Jacques, Paris" ;
+  gn:catalogueTitle "משנה סדר נזיקין (אבות ג:ד-ג:יב\t ה:א-ה:ג\t ה:כב-ו:א)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990002046880205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/170045489!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.615384615"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/170045489/2#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Nezikin" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/170045489/2#subcorpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/170045489/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-fgp, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/170045489/2#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Nezikin" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-ktiv .

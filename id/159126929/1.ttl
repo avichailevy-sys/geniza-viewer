@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/159126929/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. ENA 3145.4, image 1" ;
+  gn:nliIE "159126929" ;
+  gn:nliALMA "990053247500205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. ENA 3145.4" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "הלכה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053247500205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/159126929!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.583333333"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Jerusalem_Talmud_Jerusalem_Talmud_Gittin> ;
+  gn:unifiedCorpus "Jerusalem Talmud" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/159126929/1#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Nashim" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/159126929/1#subcorpus-1> ;
+  gn:unifiedWork "Jerusalem Talmud Gittin" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/159126929/1#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/159126929/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Jerusalem Talmud" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q387422> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/159126929/1#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Nashim" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/159126929/1#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Jerusalem Talmud Gittin" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

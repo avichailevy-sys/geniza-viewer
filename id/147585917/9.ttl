@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/147585917/9> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. 5440, image 9" ;
+  gn:nliIE "147585917" ;
+  gn:nliALMA "990053008240205171" ;
+  gn:page 9 ;
+  schema:identifier "Ms. 5440" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "קטע גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053008240205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/147585917!9/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.772727273"^^xsd:decimal ;
+  gn:classification gn:enrichment .

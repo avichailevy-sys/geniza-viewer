@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202604229/6> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S F 8/002, image 6" ;
+  gn:nliIE "202604229" ;
+  gn:nliALMA "990026242400205171" ;
+  gn:page 6 ;
+  schema:identifier "Ms. T-S F 8/002" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "תלמוד בבלי סדר נשים (כתובות ב ע\"א - ה ע\"א)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990026242400205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/202604229!6/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.8"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Ketubot> ;
+  gn:unifiedCorpus "Talmud Bavli" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/202604229/6#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Nashim" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/202604229/6#subcorpus-1> ;
+  gn:unifiedWork "Ketubot" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/202604229/6#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202604229/6#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Talmud Bavli" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q28836835> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202604229/6#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Nashim" ;
+  gn:status gn:supported ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/202604229/6#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Ketubot" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

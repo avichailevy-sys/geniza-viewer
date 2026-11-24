@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/169327561/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. XI 103, image 2" ;
+  gn:nliIE "169327561" ;
+  gn:nliALMA "990053860110205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. XI 103" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "תרגום ערבי לתורה לרס\"ג (בראשית ל:מ-לא:י)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053860110205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/169327561!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.909090909"^^xsd:decimal ;
+  gn:classification gn:enrichment .

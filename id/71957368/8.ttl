@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/71957368/8> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Heb. 5699=28, image 8" ;
+  gn:nliIE "71957368" ;
+  gn:nliALMA "990000432000205171" ;
+  gn:page 8 ;
+  schema:identifier "Ms. Heb. 5699=28" ;
+  schema:holdingArchive "The National Library of Israel, Jerusalem" ;
+  gn:catalogueTitle "משנה סדר זרעים (קטעים) :"@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990000432000205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/71957368!8/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.530612245"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Mishnah_Maasrot> ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/71957368/8#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Zeraim" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/71957368/8#subcorpus-1> ;
+  gn:unifiedWork "Maasrot" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/71957368/8#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/71957368/8#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:confirmed ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/71957368/8#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Zeraim" ;
+  gn:status gn:supported ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/71957368/8#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Maasrot" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/31615617/213> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. 1001-1089, image 213" ;
+  gn:nliIE "31615617" ;
+  gn:nliALMA "990001272920205171" ;
+  gn:page 213 ;
+  schema:identifier "Ms. 1001-1089" ;
+  schema:holdingArchive "Hebrew Union College Library, Cincinnati ·  OH" ;
+  gn:catalogueTitle "קטעי גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001272920205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/31615617!213/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.863636364"^^xsd:decimal ;
+  gn:classification gn:enrichment .

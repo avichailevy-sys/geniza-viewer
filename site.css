@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap");
 /* Shared style for the record pages (id/...), the vocabulary page and the examples page. */
 :root {
   --bg: #f4f4f0; --paper: #ffffff; --ink: #222; --muted: #6b6b66; --line: #e2e2dc;

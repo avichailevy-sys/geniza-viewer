@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/47711867/64> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II B 454, image 64" ;
+  gn:nliIE "47711867" ;
+  gn:nliALMA "990001570010205171" ;
+  gn:page 64 ;
+  schema:identifier "Ms. EVR II B 454" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תורה (קטעים)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001570010205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/47711867!64/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.84375"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Tanakh" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/47711867/64#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/47711867/64#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-fgp .

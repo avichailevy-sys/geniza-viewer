@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48822306/8> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II B 1211, image 8" ;
+  gn:nliIE "48822306" ;
+  gn:nliALMA "990001577940205171" ;
+  gn:page 8 ;
+  schema:identifier "Ms. EVR II B 1211" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "נביאים (שופטים-שמואל\t קטעים)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001577940205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/48822306!8/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.860759494"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Judges> ;
+  gn:unifiedCorpus "Tanakh" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/48822306/8#corpus-1> ;
+  gn:unifiedSubCorpus "Prophets" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/48822306/8#subcorpus-1> ;
+  gn:unifiedWork "Judges" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/48822306/8#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48822306/8#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48822306/8#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Prophets" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48822306/8#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Judges" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

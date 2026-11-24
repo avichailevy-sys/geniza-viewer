@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/148923593/144> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II A 100/01, image 144" ;
+  gn:nliIE "148923593" ;
+  gn:nliALMA "990000852110205171" ;
+  gn:page 144 ;
+  schema:identifier "Ms. EVR II A 100/01" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "קובץ חבורי יוסף בן תנחום הירושלמי."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990000852110205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/148923593!144/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.633333333"^^xsd:decimal ;
+  gn:classification gn:enrichment .

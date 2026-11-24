@@ -1,0 +1,37 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/164234931/4> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S A 45.10, image 4" ;
+  gn:nliIE "164234931" ;
+  gn:nliALMA "990051144070205171" ;
+  gn:page 4 ;
+  schema:identifier "Ms. T-S A 45.10" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "מגילת אנטיוכוס;ספרים חיצוניים;תעודות אישיות ושטרות."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990051144070205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/164234931!4/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.863636364"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Otzar_Midrashim> ;
+  gn:unifiedCorpus "Rabbinic / Midrash" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/164234931/4#corpus-1> ;
+  gn:unifiedWork "Otzar Midrashim" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/164234931/4#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/164234931/4#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Rabbinic / Midrash" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q202344> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/164234931/4#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Otzar Midrashim" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

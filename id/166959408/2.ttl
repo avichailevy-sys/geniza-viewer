@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/166959408/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S Ar. 1a.145, image 2" ;
+  gn:nliIE "166959408" ;
+  gn:nliALMA "990051254140205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. T-S Ar. 1a.145" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "מקרא [טקסט];תפסיר ערבי;תפסיר רס\"ג."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990051254140205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/166959408!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.9375"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Tanakh" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/166959408/2#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/166959408/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-ktiv .

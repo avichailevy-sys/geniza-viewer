@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/142316725/4> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. 7b/2, image 4" ;
+  gn:nliIE "142316725" ;
+  gn:nliALMA "990026963830205171" ;
+  gn:page 4 ;
+  schema:identifier "Ms. 7b/2" ;
+  schema:holdingArchive "Lehnardt ·  Andreas, Mainz" ;
+  gn:catalogueTitle "תורה (שמות יב:כט-יב:לז)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990026963830205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/142316725!4/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.538461538"^^xsd:decimal ;
+  gn:classification gn:enrichment .

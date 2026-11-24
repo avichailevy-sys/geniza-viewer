@@ -1,0 +1,51 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Guenzburg 1342, image 5" ;
+  gn:nliIE "76967326" ;
+  gn:nliALMA "990001469060205171" ;
+  gn:page 5 ;
+  schema:identifier "Ms. Guenzburg 1342" ;
+  schema:holdingArchive "The Russian State Library, Moscow" ;
+  gn:catalogueTitle "תלמוד בבלי סדר קדשים (מנחות כא-כח\t מעילה ב-י)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001469060205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/76967326!5/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.612903226"^^xsd:decimal ;
+  gn:classification gn:contradiction ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#corpus-1> ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#corpus-2> ;
+  gn:unifiedSubCorpus "Seder Kodashim" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#subcorpus-1> ;
+  gn:unifiedWork "Meilah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Talmud Bavli" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q28836835> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#corpus-2> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-fgp .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Kodashim" ;
+  gn:status gn:supported ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/76967326/5#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Meilah" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

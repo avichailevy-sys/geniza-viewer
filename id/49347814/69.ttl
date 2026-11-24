@@ -1,0 +1,50 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II A 2802, image 69" ;
+  gn:nliIE "49347814" ;
+  gn:nliALMA "990001463390205171" ;
+  gn:page 69 ;
+  schema:identifier "Ms. EVR II A 2802" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "סדור מנהג קראים (קטעים)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001463390205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/49347814!69/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.512820513"^^xsd:decimal ;
+  gn:classification gn:contradiction ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#corpus-1> ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#corpus-2> ;
+  gn:unifiedSubCorpus "Writings" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#subcorpus-1> ;
+  gn:unifiedWork "Psalms" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#corpus-2> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:contested ;
+  prov:wasAttributedTo gn:source-fgp .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Writings" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49347814/69#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Psalms" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

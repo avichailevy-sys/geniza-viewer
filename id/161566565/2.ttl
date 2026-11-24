@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/161566565/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. VI A 43, image 2" ;
+  gn:nliIE "161566565" ;
+  gn:nliALMA "990048057820205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. VI A 43" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "זהר (ספר במדבר\t פרשת בהעלותך)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990048057820205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/161566565!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.620689655"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Zohar" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/161566565/2#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/161566565/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Zohar" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q2888662> ;
+  prov:wasAttributedTo gn:source-fgp .

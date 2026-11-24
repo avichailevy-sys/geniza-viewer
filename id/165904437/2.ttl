@@ -1,0 +1,36 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/165904437/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. VI B 182, image 2" ;
+  gn:nliIE "165904437" ;
+  gn:nliALMA "990049111830205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. VI B 182" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "שבחי רשב\"י."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990049111830205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/165904437!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.72"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Zohar" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/165904437/2#corpus-1> ;
+  gn:unifiedSubCorpus "Bereshit" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/165904437/2#subcorpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/165904437/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Zohar" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q2888662> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/165904437/2#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Bereshit" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

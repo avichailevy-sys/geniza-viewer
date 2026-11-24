@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48644701/7> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II B 1045, image 7" ;
+  gn:nliIE "48644701" ;
+  gn:nliALMA "990001576200205171" ;
+  gn:page 7 ;
+  schema:identifier "Ms. EVR II B 1045" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תורה (בראשית ט:א-יא:כו)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001576200205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/48644701!7/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.62"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Tanakh" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/48644701/7#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/48644701/7#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-fgp .

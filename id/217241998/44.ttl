@@ -1,0 +1,51 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. 5934, image 44" ;
+  gn:nliIE "217241998" ;
+  gn:nliALMA "990001120100205171" ;
+  gn:page 44 ;
+  schema:identifier "Ms. 5934" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "משנה סדר זרעים ומועד (קטעים)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001120100205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/217241998!44/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.611111111"^^xsd:decimal ;
+  gn:classification gn:contradiction ;
+  schema:about <https://www.sefaria.org/Mishnah_Moed_Katan> ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#corpus-1> ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#subcorpus-1> ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#subcorpus-2> ;
+  gn:unifiedWork "Moed Katan" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Moed" ;
+  gn:status gn:contested ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#subcorpus-2> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Zeraim" ;
+  gn:status gn:contested ;
+  prov:wasAttributedTo gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/217241998/44#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Moed Katan" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

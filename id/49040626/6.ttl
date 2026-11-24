@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49040626/6> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II A 294/02, image 6" ;
+  gn:nliIE "49040626" ;
+  gn:nliALMA "990000851950205171" ;
+  gn:page 6 ;
+  schema:identifier "Ms. EVR II A 294/02" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "משנה סדר נזיקין (בבא מציעא י:ו-בבא בתרא ב:ג)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990000851950205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/49040626!6/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.619047619"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Mishnah_Bava_Batra> ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49040626/6#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Nezikin" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49040626/6#subcorpus-1> ;
+  gn:unifiedWork "Bava Batra" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/49040626/6#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49040626/6#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:confirmed ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49040626/6#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Nezikin" ;
+  gn:status gn:supported ;
+  prov:wasAttributedTo gn:source-passim, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/49040626/6#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Bava Batra" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

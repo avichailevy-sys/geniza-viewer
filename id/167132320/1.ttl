@@ -1,0 +1,35 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167132320/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S NS 154.136, image 1" ;
+  gn:nliIE "167132320" ;
+  gn:nliALMA "990051530320205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. T-S NS 154.136" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "פיוט;תפילה וברכות;תפילות קבע."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990051530320205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/167132320!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.571428571"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Liturgy" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/167132320/1#corpus-1> ;
+  gn:unifiedSubCorpus "Siddur" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/167132320/1#subcorpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167132320/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:confirmed ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167132320/1#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Siddur" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

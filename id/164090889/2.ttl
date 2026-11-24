@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/164090889/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. T-S A 32.127, image 2" ;
+  gn:nliIE "164090889" ;
+  gn:nliALMA "990051138330205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. T-S A 32.127" ;
+  schema:holdingArchive "Cambridge University Library, Cambridge" ;
+  gn:catalogueTitle "מקרא [טקסט]."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990051138330205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/164090889!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.928571429"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Psalms> ;
+  gn:unifiedCorpus "Tanakh" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/164090889/2#corpus-1> ;
+  gn:unifiedSubCorpus "Writings" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/164090889/2#subcorpus-1> ;
+  gn:unifiedWork "Psalms" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/164090889/2#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/164090889/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:confirmed ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp, gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/164090889/2#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Writings" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/164090889/2#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Psalms" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

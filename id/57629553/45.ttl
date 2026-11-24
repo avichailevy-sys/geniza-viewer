@@ -1,0 +1,27 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/57629553/45> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. EVR II A 2026, image 45" ;
+  gn:nliIE "57629553" ;
+  gn:nliALMA "990001455110205171" ;
+  gn:page 45 ;
+  schema:identifier "Ms. EVR II A 2026" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תפלה לערב עשרה באב ושחרית לעשרה באב מנהג הקראים."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001455110205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/57629553!45/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.942857143"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Liturgy" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/57629553/45#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/57629553/45#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-fgp .

@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/36833799/158> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Evr. Antonin A 1, image 158" ;
+  gn:nliIE "36833799" ;
+  gn:nliALMA "990000895680205171" ;
+  gn:page 158 ;
+  schema:identifier "Ms. Evr. Antonin A 1" ;
+  schema:holdingArchive "The National Library of Russia, St. Petersburg" ;
+  gn:catalogueTitle "תנ\"ך."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990000895680205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/36833799!158/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.506329114"^^xsd:decimal ;
+  gn:classification gn:enrichment .

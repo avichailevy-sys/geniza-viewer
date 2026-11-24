@@ -1,0 +1,35 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/149609219/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. ENA 1488.9, image 2" ;
+  gn:nliIE "149609219" ;
+  gn:nliALMA "990053576580205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. ENA 1488.9" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "משנה תורה;ספרא."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053576580205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/149609219!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.666666667"^^xsd:decimal ;
+  gn:classification gn:contradiction ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/149609219/2#corpus-1> ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/149609219/2#corpus-2> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/149609219/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Rabbinic / Midrash" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q202344> ;
+  prov:wasAttributedTo gn:source-fgp .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/149609219/2#corpus-2> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishneh Torah" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q201029> ;
+  prov:wasAttributedTo gn:source-ktiv .

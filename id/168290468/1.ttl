@@ -1,0 +1,50 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Or. 5557Q.6, image 1" ;
+  gn:nliIE "168290468" ;
+  gn:nliALMA "990053507640205171" ;
+  gn:page 1 ;
+  schema:identifier "Or. 5557Q.6" ;
+  schema:holdingArchive "The British Library, London" ;
+  gn:catalogueTitle "פיוט;תוספות של סידור;תפילה וברכות."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053507640205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/168290468!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.777777778"^^xsd:decimal ;
+  gn:classification gn:contradiction ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#corpus-1> ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#corpus-2> ;
+  gn:unifiedSubCorpus "Writings" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#subcorpus-1> ;
+  gn:unifiedWork "Psalms" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Tanakh" ;
+  gn:status gn:contested ;
+  schema:about <http://www.wikidata.org/entity/Q83367> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#corpus-2> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:contested ;
+  prov:wasAttributedTo gn:source-ktiv .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Writings" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/168290468/1#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Psalms" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

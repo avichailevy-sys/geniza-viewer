@@ -1,0 +1,28 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/156868762/13> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Genizah 438, image 13" ;
+  gn:nliIE "156868762" ;
+  gn:nliALMA "990001904720205171" ;
+  gn:page 13 ;
+  schema:identifier "Ms. Genizah 438" ;
+  schema:holdingArchive "Library at the Herbert D. Katz Center for Advanced Judaic Studies ·  University of Pennsylvania, Philadelphia ·  PA" ;
+  gn:catalogueTitle "פרדס רמונים (קטע)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001904720205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/156868762!13/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.517241379"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Zohar" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/156868762/13#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/156868762/13#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Zohar" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q2888662> ;
+  prov:wasAttributedTo gn:source-fgp .

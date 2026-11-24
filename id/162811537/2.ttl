@@ -1,0 +1,27 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/162811537/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. V 33.1, image 2" ;
+  gn:nliIE "162811537" ;
+  gn:nliALMA "990002035010205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. V 33.1" ;
+  schema:holdingArchive "Mosseri ·  Jacques, Paris" ;
+  gn:catalogueTitle "הוא נקרא ראש וראשון (קטע)."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990002035010205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/162811537!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.909090909"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  gn:unifiedCorpus "Liturgy" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/162811537/2#corpus-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/162811537/2#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Liturgy" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-fgp .

@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/159702056/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. ENA 3434.11, image 2" ;
+  gn:nliIE "159702056" ;
+  gn:nliALMA "990053274260205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. ENA 3434.11" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "תפסיר ערבי;תרגומים ארמיים."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053274260205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/159702056!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.923076923"^^xsd:decimal ;
+  gn:classification gn:enrichment .

@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/160443365/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. 4068.39, image 1" ;
+  gn:nliIE "160443365" ;
+  gn:nliALMA "990053950250205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. 4068.39" ;
+  schema:holdingArchive "The National and University Library of Strasbourg, Strasbourg" ;
+  gn:catalogueTitle "תפסיר ערבי."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053950250205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/160443365!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.545454545"^^xsd:decimal ;
+  gn:classification gn:enrichment .

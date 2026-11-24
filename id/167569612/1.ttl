@@ -1,0 +1,37 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167569612/1> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. heb. d. 54.6, image 1" ;
+  gn:nliIE "167569612" ;
+  gn:nliALMA "990053413370205171" ;
+  gn:page 1 ;
+  schema:identifier "Ms. heb. d. 54.6" ;
+  schema:holdingArchive "The Bodleian Libraries ·  University of Oxford, Oxford" ;
+  gn:catalogueTitle "ספרא."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990053413370205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/167569612!1/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.96"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Sifra> ;
+  gn:unifiedCorpus "Rabbinic / Midrash" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/167569612/1#corpus-1> ;
+  gn:unifiedWork "Sifra" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/167569612/1#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167569612/1#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Rabbinic / Midrash" ;
+  gn:status gn:supported ;
+  schema:about <http://www.wikidata.org/entity/Q202344> ;
+  prov:wasAttributedTo gn:source-passim, gn:source-fgp .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/167569612/1#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Sifra" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/79591990/52> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Guenzburg 920, image 52" ;
+  gn:nliIE "79591990" ;
+  gn:nliALMA "990001467520205171" ;
+  gn:page 52 ;
+  schema:identifier "Ms. Guenzburg 920" ;
+  schema:holdingArchive "The Russian State Library, Moscow" ;
+  gn:catalogueTitle "קובץ קטעי גניזה."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990001467520205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/79591990!52/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.894736842"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Mishnah_Zavim> ;
+  gn:unifiedCorpus "Mishnah" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/79591990/52#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Tahorot" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/79591990/52#subcorpus-1> ;
+  gn:unifiedWork "Zavim" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/79591990/52#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/79591990/52#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Mishnah" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q191825> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/79591990/52#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Tahorot" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/79591990/52#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Zavim" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

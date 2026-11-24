@@ -1,0 +1,45 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/213656575/33> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. 6337, image 33" ;
+  gn:nliIE "213656575" ;
+  gn:nliALMA "990037932710205171" ;
+  gn:page 33 ;
+  schema:identifier "Ms. 6337" ;
+  schema:holdingArchive "The Jewish Theological Seminary of America, New York ·  NY" ;
+  gn:catalogueTitle "קובץ תלמוד ורי\"ף."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990037932710205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/213656575!33/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.866666667"^^xsd:decimal ;
+  gn:classification gn:enrichment ;
+  schema:about <https://www.sefaria.org/Bava_Kamma> ;
+  gn:unifiedCorpus "Talmud Bavli" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/213656575/33#corpus-1> ;
+  gn:unifiedSubCorpus "Seder Nezikin" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/213656575/33#subcorpus-1> ;
+  gn:unifiedWork "Bava Kamma" ;
+  gn:hasIdentification <https://avichailevy-sys.github.io/geniza-viewer/id/213656575/33#tractate-1> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/213656575/33#corpus-1> a gn:Identification ;
+  gn:level gn:CorpusLevel ;
+  gn:value "Talmud Bavli" ;
+  gn:status gn:single ;
+  schema:about <http://www.wikidata.org/entity/Q28836835> ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/213656575/33#subcorpus-1> a gn:Identification ;
+  gn:level gn:SubCorpusLevel ;
+  gn:value "Seder Nezikin" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/213656575/33#tractate-1> a gn:Identification ;
+  gn:level gn:WorkLevel ;
+  gn:value "Bava Kamma" ;
+  gn:status gn:single ;
+  prov:wasAttributedTo gn:source-passim .

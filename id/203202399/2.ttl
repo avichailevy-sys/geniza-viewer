@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/203202399/2> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. IV A 191, image 2" ;
+  gn:nliIE "203202399" ;
+  gn:nliALMA "990044140820205171" ;
+  gn:page 2 ;
+  schema:identifier "Ms. IV A 191" ;
+  schema:holdingArchive "Library of the Alliance Israélite Universelle, Paris" ;
+  gn:catalogueTitle "תפלה לפרנסה בזמן ברכת כהנים."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990044140820205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/203202399!2/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.782608696"^^xsd:decimal ;
+  gn:classification gn:enrichment .

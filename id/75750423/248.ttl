@@ -1,0 +1,19 @@
+@prefix gn: <https://avichailevy-sys.github.io/geniza-viewer/ns#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://avichailevy-sys.github.io/geniza-viewer/id/75750423/248> a gn:Fragment, schema:ArchiveComponent ;
+  rdfs:label "Ms. Guenzburg 1181, image 248" ;
+  gn:nliIE "75750423" ;
+  gn:nliALMA "990036639390205171" ;
+  gn:page 248 ;
+  schema:identifier "Ms. Guenzburg 1181" ;
+  schema:holdingArchive "The Russian State Library, Moscow" ;
+  gn:catalogueTitle "קובץ."@he ;
+  rdfs:seeAlso <https://www.nli.org.il/en/manuscripts/NNL_ALEPH990036639390205171/NLI> ;
+  schema:image <https://api.nli.org.il/openlibrary/api/iiif/75750423!248/full/800,/0/default.jpg> ;
+  gn:passimCoverage "0.534482759"^^xsd:decimal ;
+  gn:classification gn:enrichment .
